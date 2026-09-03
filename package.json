@@ -1,0 +1,15 @@
+{
+  "name": "quick-apps-hub",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Statyczny katalog niezależnych mikroaplikacji frontendowych.",
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "clean": "node scripts/clean.mjs",
+    "check": "node scripts/check.mjs",
+    "test": "node --test",
+    "build": "node scripts/build.mjs",
+    "scaffold": "node scripts/scaffold.mjs"
+  }
+}

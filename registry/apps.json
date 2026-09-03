@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "hub": {
+    "name": "Quick Apps Hub",
+    "description": "Małe produkty, szybkie eksperymenty, jeden czytelny katalog."
+  },
+  "apps": [
+    {
+      "slug": "signal-deck",
+      "name": "Signal / Deck",
+      "description": "Interaktywna prezentacja produktu sterowana klawiaturą.",
+      "category": "Prezentacja",
+      "accent": "#9b87f5",
+      "source": "apps/signal-deck",
+      "template": "presentation",
+      "featured": true
+    },
+    {
+      "slug": "northstar-landing",
+      "name": "Northstar",
+      "description": "Konwersyjny landing dla platformy operacyjnej zespołów.",
+      "category": "Landing page",
+      "accent": "#5eead4",
+      "source": "apps/northstar-landing",
+      "template": "landing",
+      "featured": true
+    },
+    {
+      "slug": "pulse-dashboard",
+      "name": "Pulse Analytics",
+      "description": "Responsywny dashboard z filtrami i wykresem bez bibliotek.",
+      "category": "Dashboard",
+      "accent": "#ffb86b",
+      "source": "apps/pulse-dashboard",
+      "template": "dashboard",
+      "featured": true
+    }
+  ]
+}
