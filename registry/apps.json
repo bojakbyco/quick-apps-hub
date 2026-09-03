@@ -6,6 +6,16 @@
   },
   "apps": [
     {
+      "slug": "xc60-campkit",
+      "name": "XC60 CampKit",
+      "description": "Projekt jakościowej zabudowy campingowej DIY: BOM, CNC, konfigurator i plan wykonania.",
+      "category": "Prezentacja",
+      "accent": "#ff5c35",
+      "source": "apps/xc60-campkit",
+      "template": "presentation",
+      "featured": true
+    },
+    {
       "slug": "signal-deck",
       "name": "Signal / Deck",
       "description": "Interaktywna prezentacja produktu sterowana klawiaturą.",
