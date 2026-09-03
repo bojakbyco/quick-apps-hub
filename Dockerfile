@@ -5,6 +5,7 @@ COPY hub ./hub
 COPY registry ./registry
 COPY apps ./apps
 COPY scripts ./scripts
+COPY test ./test
 RUN npm run check && npm test && npm run build
 FROM nginx:1.27-alpine
 COPY nginx.conf /etc/nginx/conf.d/default.conf
