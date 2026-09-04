@@ -131,3 +131,11 @@ tr:last-child td{border-bottom:2px solid var(--rule)}
 .legend{border:1.5px solid var(--rule);background:var(--card);padding:9px 14px;margin:14px 0 0;font:500 .84rem/1.7 var(--sans);color:var(--ink2)}
 .legend strong{font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:.72rem;display:block;margin-bottom:3px;color:var(--ink)}
 @media print{.legend{border-width:.8pt;padding:1.5mm 3mm;margin:0 0 2mm;font-size:7pt;line-height:1.5}.legend strong{font-size:6.2pt;margin-bottom:1mm}}
+
+/* ── tag restyle (v10): compact superscript stamps ── */
+.tag{font:700 .58rem var(--sans);border:none;border-radius:2px;padding:0 4px;letter-spacing:.02em;text-transform:uppercase;vertical-align:.35em;background:rgba(25,23,18,.06);color:var(--ink2)}
+.tag.e{background:transparent;border:none;color:var(--soft)}
+.tag.a{background:transparent;border:none;color:var(--soft)}
+.tag.x{background:transparent;border:none;color:var(--soft);text-decoration:underline dotted}
+.vp b{margin-bottom:2px}
+@media print{.tag{font-size:5.4pt;background:transparent!important;color:#000!important}}
