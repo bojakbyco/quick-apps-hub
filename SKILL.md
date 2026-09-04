@@ -34,7 +34,8 @@ Artefakt ma być gotowy do pokazania, nie placeholderem. Mobile jest wymaganiem 
 - dokument nie może mieć przypadkowego poziomego overflow; karuzele poziome są dozwolone tylko jako jawny, dotykowy wzorzec z `scroll-snap`;
 - prezentacje muszą mieścić kluczową myśl slajdu w jednym ekranie S24; jeśli treść wymaga przewijania, ma być ono wewnętrzne, oczywiste i kończyć się nad nawigacją;
 - dashboardy na mobile używają kompaktowych kart/karuzel zamiast ściskania desktopowej siatki;
-- nagłówki mają płynną skalę (`clamp()`), media zachowują proporcje, a komponenty nie używają sztywnej szerokości większej niż viewport;
+- nagłówki mają płynną skalę (`clamp()`); na szerokości 360 px zwykłe nagłówki slajdów mają zazwyczaj `28–36px`, a hero może dojść do `44px` tylko gdy cała fraza łamie się celowo — niedopuszczalny jest układ po jednym zwykłym słowie w wierszu;
+- media zachowują proporcje, a komponenty nie używają sztywnej szerokości większej niż viewport;
 - wszystkie cele dotykowe mają minimum 44×44 px, focus jest widoczny, a animacje respektują `prefers-reduced-motion`.
 
 QA jest zaliczone dopiero po automatycznym sprawdzeniu `scrollWidth <= innerWidth` oraz wizualnym screenshot review co najmniej na `360×780` i szerokim desktopie. Dane demo oznaczaj uczciwie. Hash nie jest kontrolą dostępu.

@@ -6,6 +6,16 @@
   },
   "apps": [
     {
+      "slug": "agritech-research-pl",
+      "name": "Monitoring Pól — badanie konceptu",
+      "description": "Ocena i koncepcja fazowa polskiego startupu agritech: sensory, SaaS, satelity, stacje solarne, finansowanie.",
+      "category": "Raport badawczy",
+      "accent": "#4ade80",
+      "source": "apps/agritech-research-pl",
+      "template": "blank",
+      "featured": false
+    },
+    {
       "slug": "xc60-campkit",
       "name": "XC60 CampKit",
       "description": "Projekt jakościowej zabudowy campingowej DIY: BOM, CNC, konfigurator i plan wykonania.",
