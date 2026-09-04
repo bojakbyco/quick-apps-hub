@@ -115,3 +115,14 @@ tr:last-child td{border-bottom:2px solid var(--rule)}
  .ok,.warn{color:#000}.bad{color:#000}
  a{color:#000;text-decoration:none}
 }
+
+
+/* ── masthead art & kicker (v4) ── */
+.masthead-art{margin:8px 0 2px;border-bottom:1px solid var(--hair);padding-bottom:6px}
+.masthead-art svg{width:min(430px,70%);height:auto;display:block;margin-inline:auto}
+.kicker{font:700 .74rem var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--soft);margin:.15em 0 .1em}
+@media print{
+ .masthead-art{margin:0 0 1.5mm;border-bottom-width:.5pt;padding-bottom:1mm}
+ .masthead-art svg{width:52%;max-height:30mm}
+ .kicker{font-size:6.6pt;margin:0 0 .5mm}
+}
