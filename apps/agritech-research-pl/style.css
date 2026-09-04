@@ -126,3 +126,8 @@ tr:last-child td{border-bottom:2px solid var(--rule)}
  .masthead-art svg{width:52%;max-height:30mm}
  .kicker{font-size:6.6pt;margin:0 0 .5mm}
 }
+
+/* ── legend on page 1 (v5) ── */
+.legend{border:1.5px solid var(--rule);background:var(--card);padding:9px 14px;margin:14px 0 0;font:500 .84rem/1.7 var(--sans);color:var(--ink2)}
+.legend strong{font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:.72rem;display:block;margin-bottom:3px;color:var(--ink)}
+@media print{.legend{border-width:.8pt;padding:1.5mm 3mm;margin:0 0 2mm;font-size:7pt;line-height:1.5}.legend strong{font-size:6.2pt;margin-bottom:1mm}}
