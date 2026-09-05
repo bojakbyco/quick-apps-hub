@@ -6,6 +6,16 @@
   },
   "apps": [
     {
+      "slug": "sewing-machines-pl",
+      "name": "sewing-machines-pl",
+      "description": "Prezentacja: sewing-machines-pl",
+      "category": "Prezentacja",
+      "accent": "#a78bfa",
+      "source": "apps/sewing-machines-pl",
+      "template": "presentation",
+      "featured": false
+    },
+    {
       "slug": "agritech-research-pl",
       "name": "Monitoring Pól — badanie konceptu",
       "description": "Ocena i koncepcja fazowa polskiego startupu agritech: sensory, SaaS, satelity, stacje solarne, finansowanie.",
