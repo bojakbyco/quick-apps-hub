@@ -41,6 +41,7 @@ code{background:#1b232b;border:1px solid #2a3540;border-radius:4px;padding:1px 6
 .links{list-style:none;padding:0;display:grid;gap:8px}
 .links a{display:block;color:#9fc7e8;text-decoration:none;border:1px solid #2a3540;border-radius:8px;padding:10px 14px;overflow-wrap:anywhere;min-height:44px}
 .links a:hover{border-color:#d98a4a}
+.hint{margin:12px 0 0;color:#8aa4b8;font-size:13.5px}
 
 nav{display:flex;align-items:center;justify-content:center;gap:14px;padding:8px 12px 14px;background:#101418}
 nav button{min-width:44px;min-height:44px;border:1px solid #2a3540;border-radius:8px;background:#1b232b;color:#eef1f4;font-size:19px;cursor:pointer}

@@ -103,8 +103,33 @@
   </ul>
 </section>
 
-<section class="slide" aria-label="Slajd 8 z 11">
-  <h2>7. Slicer pod pastę</h2>
+<section class="slide" aria-label="Slajd 8 z 12">
+  <h2>7. Okablowanie: silnik i pompa &rarr; płyta Ruby</h2>
+  <div class="two">
+    <div class="card keep">
+      <h3>Silnik krokowy ekstrudera</h3>
+      <ul>
+        <li>NEMA&nbsp;17 &rarr; 4-żyłowa wtyczka w złącze <strong>E-MOT (E0)</strong> na Ruby &mdash; tam, gdzie fabrycznie siedział ekstruder filamentowy (1:1, bez lutowania).</li>
+        <li>Klipper: <code>step_pin: PA7</code>, <code>dir_pin: PA6</code>, <code>enable_pin: !PC4</code> (bez zmian z configu bazowego).</li>
+        <li>Odwrócony kierunek tłoka? Zamień <code>dir_pin: !PA6</code> albo obróć wtyczkę o 180&deg;.</li>
+        <li>Prąd driveryka wg BTC/advance panelu; rusz powoli &mdash; pasta wymaga momentu.</li>
+      </ul>
+    </div>
+    <div class="card swap">
+      <h3>Pompa (opcjonalnie, układ ciśnieniowy)</h3>
+      <ul>
+        <li>Pompka akwariowa 24&nbsp;V &rarr; wyjście wentylatora <code>PC8</code> (do ~0,5&nbsp;A); większy prąd &ndash; przez MOSFET/przekaźnik.</li>
+        <li>Klipper: <code>[output_pin pompa]</code> + <code>pin: PC8</code>; włączanie w makrze startowym (priming powietrzem).</li>
+        <li>Alternatywnie wolne <code>PC9</code> (była grzałka hotendu) &mdash; mocniejsze obciążenie przez MOSFET.</li>
+        <li>W układzie strzykawkowym pompa niewymagana &mdash; tłok robi ciśnienie.</li>
+      </ul>
+    </div>
+  </div>
+  <p class="hint">Zawsze wyłącz zasilanie przed przełączaniem wtyczek na płycie.</p>
+</section>
+
+<section class="slide" aria-label="Slajd 9 z 12">
+  <h2>8. Slicer pod pastę</h2>
   <ul>
     <li>Prusa/Orca/Cura wystarczą &ndash; nowy profil:</li>
     <li>Dysza 2&ndash;4&nbsp;mm, warstwa 0,8&ndash;2&nbsp;mm, prędkość 15&ndash;40&nbsp;mm/s.</li>
@@ -114,8 +139,8 @@
   </ul>
 </section>
 
-<section class="slide" aria-label="Slajd 9 z 11">
-  <h2>8. Plan realizacji</h2>
+<section class="slide" aria-label="Slajd 10 z 12">
+  <h2>9. Plan realizacji</h2>
   <ol class="steps">
     <li>Demontaż hotendu i ekstrudera X2</li>
     <li>Druk / zamówienie części z plików STEP</li>
@@ -127,8 +152,8 @@
   </ol>
 </section>
 
-<section class="slide" aria-label="Slajd 10 z 11">
-  <h2>9. Ryzyka i pułapki</h2>
+<section class="slide" aria-label="Slajd 11 z 12">
+  <h2>10. Ryzyka i pułapki</h2>
   <ul>
     <li>Zła konsystencja &rarr; zapchanie dyszy / rozwarstwienia.</li>
     <li>Bąbelki powietrza &rarr; przerwy w ekstruzji.</li>
@@ -139,8 +164,8 @@
   </ul>
 </section>
 
-<section class="slide" aria-label="Slajd 11 z 11">
-  <h2>10. Podsumowanie</h2>
+<section class="slide" aria-label="Slajd 12 z 12">
+  <h2>11. Podsumowanie</h2>
   <ul>
     <li>Konwersja odwracalna &ndash; hotend wraca na miejsce.</li>
     <li>Koszt ekstrudera: ~100&ndash;300&nbsp;zł; więcej kosztuje pasta i wypał.</li>
