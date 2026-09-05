@@ -23,5 +23,6 @@ jobs:
         uses: dokku/github-action@master
         with:
           git_remote_url: ssh://dokku@dev.jakbyco.com:22/quick-apps-hub
+          branch: main
           ssh_private_key: ${{ secrets.DOKKU_SSH_KEY }}
           git_push_flags: --force
