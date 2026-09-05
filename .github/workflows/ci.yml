@@ -16,3 +16,10 @@ jobs:
       - run: npm run check
       - run: npm test
       - run: npm run build
+      - name: Deploy to Dokku
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: dokku/github-action@master
+        with:
+          git_remote_url: ssh://dokku@dev.jakbyco.com:22/quick-apps-hub
+          ssh_private_key: ${{ secrets.DOKKU_SSH_KEY }}
+          git_push_flags: --force
