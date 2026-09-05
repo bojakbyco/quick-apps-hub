@@ -1,0 +1,118 @@
+<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Smart Pedal — koncepcja produktu"><title>Smart Pedal — koncepcja produktu</title><link rel="stylesheet" href="style.css"><script defer src="app.js"></script></head>
+<body>
+<header><a href="/">Q / HUB</a><span>Smart Pedal — koncepcja produktu</span><span id="counter">01 — 10</span></header>
+<main aria-live="polite">
+
+<section class="slide active"><div class="index">01</div><div>
+<p class="kicker">KONCEPCJA PRODUKTU / WRZESIEŃ 2026</p>
+<h1>Smart Pedal:<br><em>spokojna stopa.</em></h1>
+<p class="lead">Pedał z regulacją nacisku i limitem prędkości dla domowych maszyn do szycia. Upgrade za ~150–250 zł, który zamienia nerwowe szycie w kontrolowane — bez wymiany maszyny.</p>
+</div></section>
+
+<section class="slide"><div class="index">02</div><div>
+<p class="kicker">PROBLEM</p>
+<h2>Pedał to najsłabszy<br>węzeł <em>uczenia się.</em></h2>
+<div class="grid3">
+<p><b>100%</b><span>maszyn mechanicznych (Singer 4423, Janome HD523, Bernette) ma pedał czysto analogowy: mały nacisk = skok z 0 do 400 ściegów/min. Początkujący najczęściej boją się pedału, nie maszyny.</span></p>
+<p><b>0 zł</b><span>wydają właściciele mechanicznych maszyn na rozwiązanie — bo nie istnieje dedykowany produkt. Limiter prędkości mają tylko maszyny komputerowe za 2000+ zł.</span></p>
+<p><b>2 pytania</b><span>na forach (r/sewhelp, ekrawiectwo.pl) powtarzają się w kółko: „maszyna szyc za szybko" i „czuję pedał zbyt czuły". Odpowiedź zawsze: „kup droższą maszynę".</span></p>
+</div>
+</div></section>
+
+<section class="slide"><div class="index">03</div><div>
+<p class="kicker">ROZWIĄZANIE</p>
+<h2>Pedał-pośrednik:<em><br>czyta i tłumaczy.</em></h2>
+<div class="cols2">
+<p><b>Jak działa</b><span>Zamiast zastępować elektronikę maszyny, Smart Pedal siedzi między oryginalnym pedałem a maszyną: odczytuje sygnał (0–20 kΩ), przelicza go przez wybraną krzywą (soft-start, limit %, progresywna odpowiedź) i wysyła do maszyny emulowaną rezystancję. Maszyna „widzi" zwykły pedał — tylko przyjemniejszy w obsłudze.</span></p>
+<p><b>Dlaczego tak</b><span>Bez ingerencji w silnik i elektronikę maszyny = zero ryzyka gwarancji, zero mocy sieciowej 230V w urządzeniu (pasywne przełożenie sygnału), kompatybilność z całym parkiem maszyn analogowych. To ten sam pattern, który przyjął się w drone'ach (radio-piloty z ogranicznikami) i e-rowerach (tuning boxy przed silnikiem).</span></p>
+</div>
+</div></section>
+
+<section class="slide"><div class="index">04</div><div>
+<p class="kicker">KOMPATYBILNOŚĆ</p>
+<h2>Jak się <em>paruje</em><br>z maszynami.</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>Typ maszyny</th><th>Interfejs pedału</th><th>Sposób połączenia</th><th>Pokrycie rynku PL</th></tr></thead>
+<tbody>
+<tr><td>Mechaniczne (Singer HD, Janome HD/423S, Bernette, Juki HZL, Redstar)</td><td>Potencjometr 10–20 kΩ, wtyk 3-pin DIN / JST / Specjalny</td><td>Kabel z wtykiem pasującym do portu pedału — Smart Pedal podłącza się szerebowo</td><td>~70% — grupa docelowa nr 1</td></tr>
+<tr><td>Półkomputerowe (Brother, Singer Confidence)</td><td>Hall sensor lub pot + sygnał start/stop</td><td>Adapter z odczytem napięcia 0–5V (wykrywane automatycznie)</td><td>~20%</td></tr>
+<tr><td>Komputerowe z limiterem (Bernina, Brother NV)</td><td>Własny protokół cyfrowy</td><td>Poza zakresem — one już mają limiter</td><td>~10% — celowo pomijamy</td></tr>
+</tbody></table></div>
+<p class="foot">Parowanie = wpięcie adaptera + wybór profilu z biblioteki (aplikacja/przyciski). Biblioteka profilów budowana z czasem przez community — jak mapy OBD2 w motoryzacji.</p>
+</div></section>
+
+<section class="slide"><div class="index">05</div><div>
+<p class="kicker">ELEKTRONIKA</p>
+<h2>Co jest w <em>środku.</em></h2>
+<ol>
+<li><span>1</span><b>Czujnik Hall lub potencjometr</b> — odczyt położenia oryginalnego pedału (analogowy ADC)</li>
+<li><span>2</span><b>Mikrokontroler (ESP32-C3 ~12 zł)</b> — krzywe odpowiedzi, limit, Bluetooth do aplikacji</li>
+<li><span>3</span><b>Cyfrowy potencjometr (MCP4131 ~8 zł)</b> — emuluje rezystancję do maszyny</li>
+<li><span>4</span><b>Zasilanie pasywne / bateria CR2032</b> — brak 230V, bezpieczeństwo kluczowe dla marki</li>
+</ol>
+<p class="foot">Referencyjne projekty open-source potwierdzają wykonalność: Footsie (ESP32, konfigurowalny pedał analogowy) i Bigfoot (PID + PWM na silnik — wersja premium, wymaga mocy).</p>
+</div></section>
+
+<section class="slide"><div class="index">06</div><div>
+<p class="kicker">KOSZTY JEDNOSTKOWE</p>
+<h2>BOM: <em>~65–95 zł</em><br>przy 1000 szt.</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>Komponent</th><th>Cena/szt.</th></tr></thead>
+<tbody>
+<tr><td>ESP32-C3 mini</td><td>12 zł</td></tr>
+<tr><td>Cyfrowy pot MCP4131 + Hall 49E</td><td>14 zł</td></tr>
+<tr><td>PCB + komponenty pasywne</td><td>10 zł</td></tr>
+<tr><td>Obudowa (ABS wtrysk / druk 3D)</td><td>8–18 zł</td></tr>
+<tr><td>Kable + wtyki (zestaw 3 popularne)</td><td>12 zł</td></tr>
+<tr><td>Opakowanie retail</td><td>6 zł</td></tr>
+<tr class="hl"><td class="hl">Suma BOM + packaging</td><td class="hl">62–82 zł</td></tr>
+</tbody></table></div>
+<p class="foot">Cena detaliczna docelowa: 199–249 zł (x3–x3.5 marża na BOM — standard akcesoriów krawieckich). Narzędzie wtryskowe ~25–40 tys. zł (amortyzacja przy 2–3 tys. szt./rok).</p>
+</div></section>
+
+<section class="slide"><div class="index">07</div><div>
+<p class="kicker">DLACZEGO KUPLĄ</p>
+<h2>Funkcje, które<br><em>przekonują.</em></h2>
+<div class="grid3">
+<p><b>Limiter</b><span>Pokrętło max. prędkości 25/50/75/100% — dziecko czy początkujący nie rozpędzi maszyny. Analogia: tryb S w aparatach — „bezpieczny start".</span></p>
+<p><b>Soft-start</b><span>Ścieżka „pierwsze 3 sekundy wolno" — maszyna rusza płynnie zamiast skakać. Rozwiązuje najczęstszą skargę nr 1 początkujących.</span></p>
+<p><b>Krzywe nacisku</b><span>3 profile czułości (delikatny/standard/sportowy) — ten sam pedał dla dziecka, mamy i szwaczki przemysłowej.</span></p>
+<p><b>Memoria prędkości</b><span>Ustabilizowana prędkość cruise-control przy lekkim nacisku — pikowanie bez zmęczania stopy.</span></p>
+<p><b>Aplikacja</b><span>Statystyki szycia (godziny, metry ściegu), firmware OTA, biblioteka profili maszyn — buduje lock-in i community.</span></p>
+<p><b>Design</b><span>Skandynawski minimalizm, kolory pasujące do maszyn (krem/beż/czarny), LED-pasek pokazujący aktualny limit. Ludzie płacą za design przy lepszych maszynach — akcesorium też może wyglądać premium.</span></p>
+</div>
+</div></section>
+
+<section class="slide"><div class="index">08</div><div>
+<p class="kicker">MODEL BIZNESOWY</p>
+<h2>Gdzie tu są<br><em>pieniądze.</em></h2>
+<div class="cols2">
+<p><b>Rynek</b><span>W Polsce sprzedaje się ~200–250 tys. maszyn domowych rocznie (szac. na bazie Allegro/Ceneo), z tego ~70% mechanicznych bez limitera. Baza zainstalowana: miliony. Cel roku 1: 3–5 tys. szt. przy 229 zł = 690 tys.–1,15 mln zł przychodu.</span></p>
+<p><b>Kanały</b><span>1) Allegro/Amazon PL — główny wolumen (początkujący szukają tam), 2) sklepy krawieckie (ultramaszyna, szyj.pl) jako polecane akcesorium, 3) kursy szycia i sewing-eventy — bundling z kursami, 4) B2B: szkoły krawieckie i pracownie (zestawy po 10 szt.).</span></p>
+</div>
+<p class="foot">Marża brutto ~55–60% przy sprzedaży bezpośredniej; po kosztach Allegro (~12%) i logistyce zostaje ~35–40% — zdrowe jak na akcesoria.</p>
+</div></section>
+
+<section class="slide"><div class="index">09</div><div>
+<p class="kicker">RYZYKA</p>
+<h2>Co może <em>pójść<br>nie tak.</em></h2>
+<div class="cols2">
+<p><b>Techniczne</b><span>Rozrzut rezystancji pedałów między markami (5k/10k/20k/50k) — konieczna biblioteka profili i autodetekcja; ryzyko uszkodzenia maszyny przy złym profilu = potrzebny tryb awaryjny (pass-through). Certyfikacja CE/EMC ~15–25 tys. zł i 6–10 tygodni.</span></p>
+<p><b>Rynkowe</b><span>Chińczycy mogą skopiować w 6 miesięcy — obrona to marka, aplikacja i biblioteka profili (network effect), nie patent. Możliwe, że producenci maszyn dodadzą limitery seryjnie — wtedy Smart Pedal przechodzi do segmentu upgrade starszego parku maszyn (na razie nikt tego nie robi, bo limiter = argument do droższych modeli).</span></p>
+</div>
+</div></section>
+
+<section class="slide"><div class="index">10</div><div>
+<p class="kicker">ROADMAPA</p>
+<h2>Pierwszy krok:<em><br>prototyp za 300 zł.</em></h2>
+<ol>
+<li><span>M1</span>Prototyp na płytce stykowej (ESP32 + MCP4131 + 3 pedały testowe: Singer/Janome/Bernette) — walidacja koncepcji, 2 tygodnie</li>
+<li><span>M2–3</span>PCB + obudowa drukowana, testy z 10 osobami początkującymi, aplikacja MVP</li>
+<li><span>M4–6</span>Kampania na Allegro Ładowarki / Kickstarter PL — walidacja popytu przed wtryskiem obudów</li>
+</ol>
+<p class="lead">Najtańszy możliwy test: prototyp + 10 wywiadów w pracowniach krawieckich. Jeśli 3 z 10 osób mówi „chcę to jutro" — projekt ma nogi.</p>
+</div></section>
+
+</main>
+<footer><span>← → / spacja, aby nawigować</span><div><button id="prev" aria-label="Poprzedni slajd">←</button><button id="next" aria-label="Następny slajd">→</button></div></footer>
+</body></html>
