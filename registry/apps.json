@@ -6,6 +6,16 @@
   },
   "apps": [
     {
+      "slug": "ceramic-printer-sidewinder-x2",
+      "name": "Sidewinder X2 → drukarka ceramiczna",
+      "description": "Prezentacja konwersji: ekstruder strzykawkowy jyjblrd + Klipper na Raspberry Pi, pasta ceramiczna, kalibracja i wypał.",
+      "category": "Prezentacja",
+      "accent": "#d98a4a",
+      "source": "apps/ceramic-printer-sidewinder-x2",
+      "template": "presentation",
+      "featured": false
+    },
+    {
       "slug": "smart-pedal",
       "name": "smart-pedal",
       "description": "Prezentacja: smart-pedal",

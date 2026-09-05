@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sidewinder X2 → drukarka ceramiczna</title>
+<meta name="description" content="Prezentacja: przebudowa Artillery Sidewinder X2 na drukarkę do ceramiki (ekstruder strzykawkowy jyjblrd) + Klipper na Raspberry Pi.">
+<link rel="stylesheet" href="./style.css?v=1">
+<script defer src="./app.js?v=1"></script>
+</head>
+<body>
+<a class="hub-link" href="/">&larr; Hub</a>
+
+<main id="deck" aria-live="polite">
+
+<section class="slide" aria-label="Slajd 1 z 11">
+  <p class="kicker">Projekt konwersji &middot; 2026</p>
+  <h1>Przebudowa Sidewinder&nbsp;X2 na drukarkę ceramiczną</h1>
+  <p class="lead">Ekstruder pasty strzykawkowej wg <strong>jyjblrd/Ceramic-3D-Printer</strong> + Klipper na Raspberry&nbsp;Pi.</p>
+  <ul class="chips">
+    <li>Artillery Sidewinder X2</li>
+    <li>Klipper + Mainsail</li>
+    <li>Pasta ceramiczna</li>
+  </ul>
+</section>
+
+<section class="slide" aria-label="Slajd 2 z 11">
+  <h2>1. Idea: druk pastą, nie filamentem</h2>
+  <ul>
+    <li>Zamiast topionego plastiku &ndash; wyciskanie pasty (glina, porcelana, slip) przez dyszę strzykawkową.</li>
+    <li>Warstwy kleją się i twardną od razu &ndash; bez chłodzenia.</li>
+    <li>Po druku: suszenie i wypał w piecu (900&ndash;1250&deg;C).</li>
+    <li>Zastosowania: wazony, naczynia, płytki, formy, prace artystyczne.</li>
+    <li class="hl">Rdzeń modyfikacji: wymiana hotendu + ekstrudera na głowicę pastową.</li>
+  </ul>
+</section>
+
+<section class="slide" aria-label="Slajd 3 z 11">
+  <h2>2. Projekt referencyjny</h2>
+  <p class="ref">github.com/jyjblrd/Ceramic-3D-Printer (Joshua Bird)</p>
+  <ul>
+    <li><code>ceramic 3d printer extruder.f3d</code> &ndash; edytowalny Fusion 360</li>
+    <li><code>ceramic 3d printer extruder.step</code> &ndash; uniwersalny CAD</li>
+    <li><code>syringe adapter.step</code> &ndash; adapter montażu strzykawki</li>
+    <li>Powstał do polarnej drukarki Core R-Theta tego samego autora.</li>
+    <li class="hl">Na X2 wystarczy strzykawkowy moduł wyciskający &ndash; bez osi obrotowej.</li>
+  </ul>
+</section>
+
+<section class="slide" aria-label="Slajd 4 z 11">
+  <h2>3. Jak działa ekstruder strzykawkowy</h2>
+  <ul>
+    <li>Strzykawka 30&ndash;60&nbsp;ml z pastą + tłok napędzany śrubą i silnikiem NEMA&nbsp;17.</li>
+    <li>Pasta wychodzi przez dyszę 1,5&ndash;4&nbsp;mm.</li>
+    <li>Adapter strzykawki = szybka wymiana zasobu pasty.</li>
+    <li>Alternatywa: butla ciśnieniowa / ram extruder &ndash; dłuższe druki, większa złożoność.</li>
+    <li class="hl">Kluczowe: średnica dyszy, lepkość pasty, siła nacisku tłoka.</li>
+  </ul>
+</section>
+
+<section class="slide" aria-label="Slajd 5 z 11">
+  <h2>4. Co zostaje, co wymieniamy</h2>
+  <div class="two">
+    <div class="card keep">
+      <h3>Zostaje</h3>
+      <ul>
+        <li>Konstrukcja, osie X/Y/Z, silniki, paski</li>
+        <li>Płyta Ruby v1.2 + zasilacz 24&nbsp;V</li>
+        <li>Raspberry Pi z Klipperem (Mainsail/Fluidd)</li>
+      </ul>
+    </div>
+    <div class="card swap">
+      <h3>Wymieniamy</h3>
+      <ul>
+        <li>Hotend + ekstruder &rarr; głowica pastowa (STEP z repo)</li>
+        <li>Stół bez grzania; płyta gipsowa/MDF, lekko wilgotna</li>
+        <li>Nowy offset Z po montażu</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="slide" aria-label="Slajd 6 z 11">
+  <h2>5. Przygotowanie pasty</h2>
+  <ul>
+    <li>Porcelana lub szamot z plastyfikatorem.</li>
+    <li>Konsystencja: gęsta śmietana / pasta do zębów.</li>
+    <li>Metyloceluloza 0,5&ndash;2% lub PVA &rarr; thixotropia, stabilna warstwa.</li>
+    <li>Przesianie i odpowietrzenie &ndash; bąbelki = przerwy w ścieżce.</li>
+    <li class="hl">Na start: gotowa pasta do druku 3D; własne receptury później.</li>
+  </ul>
+</section>
+
+<section class="slide" aria-label="Slajd 7 z 11">
+  <h2>6. Klipper: konfiguracja</h2>
+  <ul>
+    <li>Baza: <code>printer-artillery-sidewinder-x2-2022.cfg</code> (Ruby v1.2).</li>
+    <li><code>rotation_distance</code> przeliczony objętościowo (mm tłoka &rarr; mm&sup3; pasty).</li>
+    <li><code>max_extrude_only_velocity</code>: 5&ndash;10&nbsp;mm/s &ndash; ochrona mechanizmu.</li>
+    <li><code>pressure_advance</code>: kalibracja konieczna (pasta lepkosprężysta).</li>
+    <li class="hl"><code>min_extrude_temp: 0</code> &ndash; inaczej Klipper zablokuje ekstruzję bez hotendu.</li>
+    <li>Makra: priming przed startem, pauza z cofnięciem tłoka.</li>
+  </ul>
+</section>
+
+<section class="slide" aria-label="Slajd 8 z 11">
+  <h2>7. Slicer pod pastę</h2>
+  <ul>
+    <li>Prusa/Orca/Cura wystarczą &ndash; nowy profil:</li>
+    <li>Dysza 2&ndash;4&nbsp;mm, warstwa 0,8&ndash;2&nbsp;mm, prędkość 15&ndash;40&nbsp;mm/s.</li>
+    <li>Flow stroić małymi krokami; retrakcja minimalna lub żadna.</li>
+    <li>Bez part-cooling; podpory zwykle zbędne.</li>
+    <li class="hl">Tryb spiralny (vase) = klasyczne falowane naczynia; skala +5&ndash;15% na skurcz wypału.</li>
+  </ul>
+</section>
+
+<section class="slide" aria-label="Slajd 9 z 11">
+  <h2>8. Plan realizacji</h2>
+  <ol class="steps">
+    <li>Demontaż hotendu i ekstrudera X2</li>
+    <li>Druk / zamówienie części z plików STEP</li>
+    <li>Montaż na carriage, silnik &rarr; E0 płyty Ruby</li>
+    <li>Pasta, strzykawka, dysza</li>
+    <li>printer.cfg: rotation_distance, min_extrude_temp=0, PA, makra</li>
+    <li>Kalibracja: linie, flow, PA; test &ndash; walec vase</li>
+    <li>Suszenie, wypał, ocena skurczu</li>
+  </ol>
+</section>
+
+<section class="slide" aria-label="Slajd 10 z 11">
+  <h2>9. Ryzyka i pułapki</h2>
+  <ul>
+    <li>Zła konsystencja &rarr; zapchanie dyszy / rozwarstwienia.</li>
+    <li>Bąbelki powietrza &rarr; przerwy w ekstruzji.</li>
+    <li>Silna retrakcja &rarr; rozszczelnienie strzykawki.</li>
+    <li>Brak <code>min_extrude_temp: 0</code> &rarr; błąd Klippera.</li>
+    <li>Szybkie suszenie &rarr; pęknięcia.</li>
+    <li>Cięższa głowica &rarr; sprawdzić napięcie paska X.</li>
+  </ul>
+</section>
+
+<section class="slide" aria-label="Slajd 11 z 11">
+  <h2>10. Podsumowanie</h2>
+  <ul>
+    <li>Konwersja odwracalna &ndash; hotend wraca na miejsce.</li>
+    <li>Koszt ekstrudera: ~100&ndash;300&nbsp;zł; więcej kosztuje pasta i wypał.</li>
+    <li>Klipper na Pi = pełna elastyczność strojenia.</li>
+    <li class="links">
+      <a href="https://github.com/jyjblrd/Ceramic-3D-Printer" target="_blank" rel="noopener">github.com/jyjblrd/Ceramic-3D-Printer</a>
+      <a href="https://www.youtube.com/watch?v=VEgwnhLHy3g" target="_blank" rel="noopener">Wideo autora (Core R-Theta)</a>
+    </li>
+    <li class="hl">Następny krok: wydruk części ekstrudera i test konsystencji pasty.</li>
+  </ul>
+</section>
+
+</main>
+
+<nav aria-label="Nawigacja prezentacji">
+  <button id="prev" type="button" aria-label="Poprzedni slajd">&larr;</button>
+  <div id="dots" role="tablist" aria-label="Slajdy"></div>
+  <button id="next" type="button" aria-label="Następny slajd">&rarr;</button>
+</nav>
+</body>
+</html>
