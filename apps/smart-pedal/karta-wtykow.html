@@ -1,0 +1,54 @@
+<!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Smart Pedal — karta wtyków (wydruk A4)</title>
+<style>
+@page { size: A4; margin: 12mm; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font: 10.5pt/1.35 "Courier New", Courier, monospace; color: #000; background: #fff; }
+.sheet { max-width: 186mm; margin: 0 auto; padding: 4mm; }
+header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px double #000; padding-bottom: 6pt; margin-bottom: 10pt; }
+header h1 { font-size: 15pt; letter-spacing: 1pt; }
+header .sub { font-size: 8pt; margin-top: 3pt; }
+.qrbox { text-align: right; font-size: 7pt; }
+.qrbox img { width: 22mm; height: 22mm; display: block; margin-bottom: 2pt; }
+table { width: 100%; border-collapse: collapse; margin-bottom: 8pt; font-size: 8.5pt; }
+th, td { border: 1px solid #000; padding: 3pt 4pt; text-align: left; vertical-align: top; }
+th { background: #eee; font-weight: bold; }
+td.f { font-weight: bold; width: 20%; }
+.hint { font-size: 8pt; border: 1px dashed #000; padding: 4pt 6pt; margin-bottom: 10pt; }
+.hint b { display: block; margin-bottom: 2pt; }
+.foot { font-size: 7.5pt; border-top: 1px solid #000; padding-top: 4pt; margin-top: 6pt; display: flex; justify-content: space-between; }
+.cutline { border-top: 1px dashed #000; margin: 10pt 0 8pt; }
+.pins { font-size: 8pt; margin-top: 2pt; }
+@media print { .noprint { display: none; } body { font-size: 10pt; } }
+.noprint { background: #eee; padding: 6pt; margin-bottom: 10pt; font-size: 9pt; }
+.noprint button { font: inherit; padding: 2pt 8pt; cursor: pointer; }
+</style></head><body>
+<div class="noprint">▸ Karta do wydruku: <button onclick="window.print()">Drukuj / zapisz PDF (A4)</button> — QR prowadzi do pełnego decka Smart Pedal.</div>
+<div class="sheet">
+<header>
+<div>
+<h1>SMART PEDAL — KARTA WTYKÓW</h1>
+<div class="sub">Identyfikacja rodziny wtyku pedału · v1.0 · wrzesień 2026</div>
+</div>
+<div class="qrbox"><img src="qr.png" alt="QR do decka">apps.dev.jakbyco.com</div>
+</header>
+
+<div class="hint"><b>▸ JAK UŻYWAĆ (warsztat):</b> 1) Zrób zdjęcie gniazda pedału w maszynie. 2) Dopasuj bolec do rodziny poniżej (kształt + rozstaw pinów). 3) Wybierz kabel-adapter z zestawu wg rodziny. 4) Sprawdź profil rezystancji multimetrem przed pierwszym szyciem (zakres patrz tabela). Nigdy nie podłączaj adaptera na siłę — zły bolec = zła rodzina.</div>
+
+<table>
+<thead><tr><th style="width:20%">Rodzina wtyku</th><th style="width:26%">Rozpoznasz po</th><th style="width:26%">Marki / modele (przykłady)</th><th style="width:14%">Rezystancja pedału</th><th style="width:14%">Kabel-adapter</th></tr></thead>
+<tbody>
+<tr><td class="f">A · SINGER 3-pin<br>(prostokątny)</td><td>Prostokątna obudowa, 3 płaskie piny w rzędzie</td><td>Singer 4411/4423/4432, 8280, 1408–1507; Bernette 50–75; Bernina 800</td><td>~0–20 kΩ</td><td>KABEL-A</td></tr>
+<tr><td class="f">B · JANOME 3-pin<br>(okrągły)</td><td>Okrągłe gniazdo, 3 piny w okręgu / duża wtyczka</td><td>Janome mechaniczne (seria HD, 423S), overlocki Janome 1100D/1200D</td><td>~10–20 kΩ</td><td>KABEL-B</td></tr>
+<tr><td class="f">C · BROTHER 3-pin<br>(kwadratowy)</td><td>Kwadratowa obudowa z wycięciami (2 nacięcia), 3 piny</td><td>Brother LX/LS/XL/VX/PS/PX/BM, XR; overlocki 1034D/3034D; J17, Comfort</td><td>~0–20 kΩ (część: Hall)</td><td>KABEL-C</td></tr>
+<tr><td class="f">D · YDK „30990”</td><td>Terminal YDK — mniejszy bolec, specyficzny kształt</td><td>Juki HZL-25Z/27Z/35Z; Husqvarna E10/E20 Huskystar; Pfaff Smart/Smarter 140s/160s; Jaguar; Toyota</td><td>~20 kΩ</td><td>KABEL-D</td></tr>
+<tr><td class="f">E · PFAFF / HUSQVARNA C-9002</td><td>Wtyk Pfaff/Viking #C-9002 / 416489002</td><td>Pfaff Hobby, Select; Husqvarna klasyczne; niektóre sergery Huskylock</td><td>~50 kΩ</td><td>KABEL-E</td></tr>
+</tbody></table>
+
+<div class="hint"><b>▸ MONTAŻ KABLA (lutowanie):</b> Trik z „bolec–kabel–podpalenie” rozumiemy jako: przygotuj przewód → zaciśnij/zalutuj na bolec → ewentualnie skurcz opaskę termiczną (opal delikatnie, nie kabel). Kolejność pinów bierz 1:1 z oryginalnego pedału (multimetr: pin wspólny = ten, który dzwoni z obu skrajnych pozycji pedału). Po zlutowaniu zmierz rezystancję wtyk↔wtyk przy pedale w spoczynku i w pełnym nacisku — zapisz wartości w profilu maszyny w aplikacji.</div>
+
+<div class="hint"><b>▸ BEZPIECZEŃSTWO:</b> Smart Pedal jest pasywny (bez 230V). Przed podłączeniem do maszyny zawsze: tryb pass-through → test nacisku na sucho (bez nici i materiału) → dopiero potem szycie. Zły profil rezystancji = maszyna może ruszyć pełną prędkością od razu.</div>
+
+<div class="cutline"></div>
+<div class="foot"><span>SMART PEDAL · karta warsztatowa · v1.0</span><span>Źródła: listy kompatybilności Singer / Brother XC7456521 / YDK #30990 / C-9002</span><span>2026-09</span></div>
+</div>
+</body></html>
