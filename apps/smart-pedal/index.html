@@ -1,6 +1,6 @@
 <!doctype html><html lang="pl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Smart Pedal — koncepcja produktu"><title>Smart Pedal — koncepcja produktu</title><link rel="stylesheet" href="style.css"><script defer src="app.js"></script></head>
 <body>
-<header><a href="/">Q / HUB</a><span>Smart Pedal — koncepcja produktu</span><span id="counter">01 — 10</span></header>
+<header><a href="/">Q / HUB</a><span>Smart Pedal — koncepcja produktu</span><span id="counter">01 — 11</span></header>
 <main aria-live="polite">
 
 <section class="slide active"><div class="index">01</div><div>
@@ -34,7 +34,7 @@
 <div class="tablewrap"><table>
 <thead><tr><th>Typ maszyny</th><th>Interfejs pedału</th><th>Sposób połączenia</th><th>Pokrycie rynku PL</th></tr></thead>
 <tbody>
-<tr><td>Mechaniczne (Singer HD, Janome HD/423S, Bernette, Juki HZL, Redstar)</td><td>Potencjometr 10–20 kΩ, wtyk 3-pin DIN / JST / Specjalny</td><td>Kabel z wtykiem pasującym do portu pedału — Smart Pedal podłącza się szerebowo</td><td>~70% — grupa docelowa nr 1</td></tr>
+<tr><td>Mechaniczne (Singer HD, Janome HD/423S, Bernette, Juki HZL, Redstar)</td><td>Potencjometr 10–20 kΩ, wtyk 3-pin DIN / JST / Specjalny</td><td>Kabel z wtykiem pasującym do portu pedału — Smart Pedal podłącza się szeregowo</td><td>~70% — grupa docelowa nr 1</td></tr>
 <tr><td>Półkomputerowe (Brother, Singer Confidence)</td><td>Hall sensor lub pot + sygnał start/stop</td><td>Adapter z odczytem napięcia 0–5V (wykrywane automatycznie)</td><td>~20%</td></tr>
 <tr><td>Komputerowe z limiterem (Bernina, Brother NV)</td><td>Własny protokół cyfrowy</td><td>Poza zakresem — one już mają limiter</td><td>~10% — celowo pomijamy</td></tr>
 </tbody></table></div>
@@ -42,6 +42,22 @@
 </div></section>
 
 <section class="slide"><div class="index">05</div><div>
+<p class="kicker">MACIERZA WTYKÓW</p>
+<h2>Wtyki <em>współdzielą</em> rodziny,<br>nie są per marka.</h2>
+<div class="tablewrap"><table>
+<thead><tr><th>Rodzina wtyku</th><th>Marki / przykłady modeli</th><th>Pedał (sygnał)</th><th>Co dostosowujemy</th></tr></thead>
+<tbody>
+<tr><td>Singer 3-pin (prostokątny)</td><td>Singer 4411/4423/4432/8280, Singer 1408–1507, Bernette 50–75, Bernina 800</td><td>potencjometr ~0–20 kΩ</td><td>1 wtyk + profil rezystancji</td></tr>
+<tr><td>Janome 3-pin (okrągły)</td><td>Janome mechaniczne (w tym HD seria), wiele overlocków Janome</td><td>potencjometr ~10–20 kΩ</td><td>osobny wtyk, wspólna elektronika</td></tr>
+<tr><td>Brother 3-pin (kwadratowy, XC7456)</td><td>Brother LX/LS/XL/VX/PS/PX/BM, overlocki 1034D/3034D, J17…</td><td>pot 0–20 kΩ / wersje z Hall</td><td>osobny wtyk + autodetekcja sygnału</td></tr>
+<tr><td>YDK / „30990” terminal</td><td>Juki HZL-25Z/27Z/35Z, Husqvarna E10/E20, część Pfaff (Smart/Smarter), Jaguar, Toyota</td><td>potencjometr ~20 kΩ</td><td>tani przełączany kabel</td></tr>
+<tr><td>Pfaff/Husqvarna C-9002</td><td>Pfaff Hobby/Select, Husqvarna klasyczne</td><td>potencjometr ~50 kΩ</td><td>profil rezystancji + wtyk</td></tr>
+<tr class="hl"><td class="hl">Wniosek: ~5 rodzin wtyków</td><td class="hl">pokrywa ~90% parku maszyn PL</td><td class="hl">3 zakresy potów: 10/20/50 kΩ</td><td class="hl">zestaw 3 kabli + biblioteka profili w aplikacji</td></tr>
+</tbody></table></div>
+<p class="foot">Źródła: listy kompatybilności zamiennych pedałów (Singer 3-pin, Brother XC7456521, YDK #30990, C-9002) — wtyki REALNIE przeskakują marki, np. Juki HZL dzieli wtyk z Husqvarną E10/E20, a Bernette z Singerem. To obniża liczbę SKU: sprzedajemy jeden device + kabelki per rodzina.</p>
+</div></section>
+
+<section class="slide"><div class="index">06</div><div>
 <p class="kicker">ELEKTRONIKA</p>
 <h2>Co jest w <em>środku.</em></h2>
 <ol>
@@ -53,7 +69,7 @@
 <p class="foot">Referencyjne projekty open-source potwierdzają wykonalność: Footsie (ESP32, konfigurowalny pedał analogowy) i Bigfoot (PID + PWM na silnik — wersja premium, wymaga mocy).</p>
 </div></section>
 
-<section class="slide"><div class="index">06</div><div>
+<section class="slide"><div class="index">07</div><div>
 <p class="kicker">KOSZTY JEDNOSTKOWE</p>
 <h2>BOM: <em>~65–95 zł</em><br>przy 1000 szt.</h2>
 <div class="tablewrap"><table>
@@ -70,7 +86,7 @@
 <p class="foot">Cena detaliczna docelowa: 199–249 zł (x3–x3.5 marża na BOM — standard akcesoriów krawieckich). Narzędzie wtryskowe ~25–40 tys. zł (amortyzacja przy 2–3 tys. szt./rok).</p>
 </div></section>
 
-<section class="slide"><div class="index">07</div><div>
+<section class="slide"><div class="index">08</div><div>
 <p class="kicker">DLACZEGO KUPLĄ</p>
 <h2>Funkcje, które<br><em>przekonują.</em></h2>
 <div class="grid3">
@@ -83,7 +99,7 @@
 </div>
 </div></section>
 
-<section class="slide"><div class="index">08</div><div>
+<section class="slide"><div class="index">09</div><div>
 <p class="kicker">MODEL BIZNESOWY</p>
 <h2>Gdzie tu są<br><em>pieniądze.</em></h2>
 <div class="cols2">
@@ -93,7 +109,7 @@
 <p class="foot">Marża brutto ~55–60% przy sprzedaży bezpośredniej; po kosztach Allegro (~12%) i logistyce zostaje ~35–40% — zdrowe jak na akcesoria.</p>
 </div></section>
 
-<section class="slide"><div class="index">09</div><div>
+<section class="slide"><div class="index">10</div><div>
 <p class="kicker">RYZYKA</p>
 <h2>Co może <em>pójść<br>nie tak.</em></h2>
 <div class="cols2">
@@ -102,7 +118,7 @@
 </div>
 </div></section>
 
-<section class="slide"><div class="index">10</div><div>
+<section class="slide"><div class="index">11</div><div>
 <p class="kicker">ROADMAPA</p>
 <h2>Pierwszy krok:<em><br>prototyp za 300 zł.</em></h2>
 <ol>
