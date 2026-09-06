@@ -17,6 +17,10 @@ td.f { font-weight: bold; width: 20%; }
 .hint b { display: block; margin-bottom: 2pt; }
 .foot { font-size: 7.5pt; border-top: 1px solid #000; padding-top: 4pt; margin-top: 6pt; display: flex; justify-content: space-between; }
 .cutline { border-top: 1px dashed #000; margin: 10pt 0 8pt; }
+.gallery { display: flex; gap: 6pt; flex-wrap: wrap; margin-top: 4pt; }
+.gallery figure { width: 33mm; text-align: center; }
+.gallery img { width: 32mm; height: 32mm; object-fit: contain; border: 1px solid #000; background: #fff; padding: 1pt; }
+.gallery figcaption { font-size: 6.5pt; margin-top: 2pt; line-height: 1.25; }
 .pins { font-size: 8pt; margin-top: 2pt; }
 @media print { .noprint { display: none; } body { font-size: 10pt; } }
 .noprint { background: #eee; padding: 6pt; margin-bottom: 10pt; font-size: 9pt; }
@@ -41,8 +45,17 @@ td.f { font-weight: bold; width: 20%; }
 <tr><td class="f">B · JANOME 3-pin<br>(okrągły)</td><td>Okrągłe gniazdo, 3 piny w okręgu / duża wtyczka</td><td>Janome mechaniczne (seria HD, 423S), overlocki Janome 1100D/1200D</td><td>~10–20 kΩ</td><td>KABEL-B</td></tr>
 <tr><td class="f">C · BROTHER 3-pin<br>(kwadratowy)</td><td>Kwadratowa obudowa z wycięciami (2 nacięcia), 3 piny</td><td>Brother LX/LS/XL/VX/PS/PX/BM, XR; overlocki 1034D/3034D; J17, Comfort</td><td>~0–20 kΩ (część: Hall)</td><td>KABEL-C</td></tr>
 <tr><td class="f">D · YDK „30990”</td><td>Terminal YDK — mniejszy bolec, specyficzny kształt</td><td>Juki HZL-25Z/27Z/35Z; Husqvarna E10/E20 Huskystar; Pfaff Smart/Smarter 140s/160s; Jaguar; Toyota</td><td>~20 kΩ</td><td>KABEL-D</td></tr>
-<tr><td class="f">E · PFAFF / HUSQVARNA C-9002</td><td>Wtyk Pfaff/Viking #C-9002 / 416489002</td><td>Pfaff Hobby, Select; Husqvarna klasyczne; niektóre sergery Huskylock</td><td>~50 kΩ</td><td>KABEL-E</td></tr>
+<tr><td class="f">E · PFAFF / HUSQVARNA C-9002</td><td>Wtyk Pfaff/Viking #C-9002 / 416480601</td><td>Pfaff Ambition 1.0/1.5/Essential, Passport 2.0/3.0, Quilt Ambition 2.0; Husqvarna Designer Jade 20/35</td><td>~50 kΩ (do zmierzenia)</td><td>KABEL-E</td></tr>
 </tbody></table>
+
+<div class="hint"><b>▸ ZDJĘCIA BOJCÓW (podgląd; źródło = sklep z częściami):</b>
+<div class="gallery">
+<figure><img src="img/singer-A.png" alt="Singer 3-pin"><figcaption>A · Singer 3-pin<br>mikessewingmachinerepairs</figcaption></figure>
+<figure><img src="img/janome-B.jpg" alt="Janome 3-pin"><figcaption>B · Janome 3-pin<br>sewingwarehouse.com.au</figcaption></figure>
+<figure><img src="img/brother-C.jpg" alt="Brother 3-pin"><figcaption>C · Brother XC7456<br>coulingsewingmachines</figcaption></figure>
+<figure><img src="img/ydk-D.jpg" alt="YDK 30990"><figcaption>D · YDK „30990”<br>threadworks.com</figcaption></figure>
+<figure><img src="img/pfaff-E.jpg" alt="Pfaff C-9002"><figcaption>E · Pfaff C-9002<br>sewingpartsonline</figcaption></figure>
+</div></div>
 
 <div class="hint"><b>▸ MONTAŻ KABLA (lutowanie):</b> Trik z „bolec–kabel–podpalenie” rozumiemy jako: przygotuj przewód → zaciśnij/zalutuj na bolec → ewentualnie skurcz opaskę termiczną (opal delikatnie, nie kabel). Kolejność pinów bierz 1:1 z oryginalnego pedału (multimetr: pin wspólny = ten, który dzwoni z obu skrajnych pozycji pedału). Po zlutowaniu zmierz rezystancję wtyk↔wtyk przy pedale w spoczynku i w pełnym nacisku — zapisz wartości w profilu maszyny w aplikacji.</div>
 
