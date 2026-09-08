@@ -10,10 +10,10 @@ const MODELS = [
   {name:"Janome 423S", price:1100, press:1, hook:"wahadłowy", weight:7.0, power:60, spm:860, stitches:23, rating:4.5, opinions:"4,5+/5, 6 lat gwar.", note:"Schodzi z rynku — końcówki serii."},
   {name:"Juki HZL-27Z", price:990, press:0, hook:"wahadłowy", weight:5.9, power:60, spm:610, stitches:27, rating:4.9, opinions:"4,9/5 (107 opinii)", note:"Świetna jakość ściegu, ale brak docisku i tylko 610/min."},
   {name:"Redstar R30S", price:700, press:0, hook:"rotacyjny", weight:7.5, power:70, spm:800, stitches:23, rating:4.0, opinions:"pozytywne, mało", note:"Chwytacz rotacyjny i waga, ale brak regulacji docisku."},
-  {name:"Minerva Next 363D II", price:715, press:1, hook:"wahadłowy", weight:6.0, power:60, spm:850, stitches:36, rating:5.0, opinions:"5/5 (ME 30, Allegro 46)", note:"Kultowa rodzina 363: dziurka 4-krok., nawlekacz, LED."},
+  {name:"Minerva Next 363D II", price:635, press:1, hook:"wahadłowy", weight:6.0, power:60, spm:850, stitches:36, rating:5.0, opinions:"5/5 (ME 30, Allegro 46)", note:"Kultowa rodzina 363: dziurka 4-krok., nawlekacz, LED."},
   {name:"Minerva M832B", price:649, press:1, hook:"wahadłowy", weight:6.0, power:60, spm:850, stitches:36, rating:4.95, opinions:"4,9–5/5 (~95 opinii)", note:"Następca Next 363 — najwięcej maszyny za złotówkę w zestawieniu.", best:true},
-  {name:"Minerva HS1000", price:1037, press:1, hook:"rotacyjny", weight:6.9, power:60, spm:850, stitches:34, rating:4.6, opinions:"4,6/5 (Allegro 32)", note:"Pełny metal, 7-punktowy transport, dziurka 1-stopn., ścieg do 6 mm."},
-  {name:"Janome 1522 (BL)", price:1000, press:1, hook:"wahadłowy", weight:6.5, power:60, spm:860, stitches:25, rating:4.9, opinions:"5 lat gwar., nowość", note:"Podbudowa HD, przestrzeń robocza 10,5×11 cm (rekord), stopy Matic.", best:true},
+  {name:"Minerva HS1000", price:954, press:1, hook:"rotacyjny", weight:6.9, power:100, spm:850, stitches:34, rating:4.6, opinions:"4,6/5 (Allegro 32)", note:"Pełny metal, silnik servo 100 W, 7-punktowy transport, dziurka 1-stopn., ścieg do 6 mm, stopka pływająca w zestawie."},
+  {name:"Janome 1522", price:855, press:1, hook:"wahadłowy", weight:6.5, power:60, spm:860, stitches:25, rating:4.9, opinions:"4,9/5 (Ceneo 43)", note:"Podbudowa HD, przestrzeń robocza 10,5×11 cm (rekord), stopy Matic; od 855 zł (Dark Grey), Light Grey 900 zł.", best:true},
   {name:"Husqvarna Viking E20", price:770, press:1, hook:"wahadłowy", weight:6.5, power:60, spm:750, stitches:32, rating:4.9, opinions:"4,9/5 (ME 11)", note:"Szwedzka marka premium za ~750 zł; opuszczane ząbki transportu; mało opinii PL."}
 ];
 
