@@ -4,7 +4,7 @@ let apps = [];
 function render(filter = 'all') {
   list.replaceChildren();
   const visible = apps.filter(app => filter === 'all' || app.category === filter);
-  visible.sort((a, b) => String(b.updated || '').localeCompare(String(a.updated || '')));
+  visible.sort((a, b) => String(b.updated || '').localeCompare(String(a.updated || '')) || String(b.created || '').localeCompare(String(a.created || '')));
   visible.forEach((app, index) => {
     const card = template.content.firstElementChild.cloneNode(true);
     card.style.setProperty('--accent', app.accent);
@@ -12,6 +12,8 @@ function render(filter = 'all') {
     card.querySelector('.category').textContent = app.category;
     const updatedEl = card.querySelector('.updated');
     if (updatedEl) updatedEl.textContent = app.updated ? `Aktualizacja: ${app.updated}` : '';
+    const createdEl = card.querySelector('.created');
+    if (createdEl) createdEl.textContent = app.created ? `Dodano: ${app.created}` : '';
     card.querySelector('h3').textContent = app.name;
     card.querySelector('p').textContent = app.description;
     card.querySelector('a').href = `/apps/${app.slug}/`;
