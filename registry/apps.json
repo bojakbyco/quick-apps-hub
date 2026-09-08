@@ -6,14 +6,15 @@
   },
   "apps": [
     {
-      "slug": "ceramic-printer-sidewinder-x2",
-      "name": "Sidewinder X2 → drukarka ceramiczna",
-      "description": "Prezentacja konwersji: ekstruder strzykawkowy jyjblrd + Klipper na Raspberry Pi, pasta ceramiczna, kalibracja i wypał.",
+      "slug": "sewing-machines-pl",
+      "name": "Maszyny do szycia — porównanie 2026",
+      "description": "Interaktywne porównanie 14 maszyn do szycia: sortowalna tabela techniczna, zaznaczanie modeli do porównania, budżety i werdykt.",
       "category": "Prezentacja",
-      "accent": "#d98a4a",
-      "source": "apps/ceramic-printer-sidewinder-x2",
+      "accent": "#a78bfa",
+      "source": "apps/sewing-machines-pl",
       "template": "presentation",
-      "featured": false
+      "featured": false,
+      "updated": "2026-09-08"
     },
     {
       "slug": "smart-pedal",
@@ -23,17 +24,19 @@
       "accent": "#a78bfa",
       "source": "apps/smart-pedal",
       "template": "presentation",
-      "featured": false
+      "featured": false,
+      "updated": "2026-09-06"
     },
     {
-      "slug": "sewing-machines-pl",
-      "name": "Maszyny do szycia — porównanie 2026",
-      "description": "Interaktywne porównanie 14 maszyn do szycia: sortowalna tabela techniczna, zaznaczanie modeli do porównania, budżety i werdykt.",
+      "slug": "ceramic-printer-sidewinder-x2",
+      "name": "Sidewinder X2 → drukarka ceramiczna",
+      "description": "Prezentacja konwersji: ekstruder strzykawkowy jyjblrd + Klipper na Raspberry Pi, pasta ceramiczna, kalibracja i wypał.",
       "category": "Prezentacja",
-      "accent": "#a78bfa",
-      "source": "apps/sewing-machines-pl",
+      "accent": "#d98a4a",
+      "source": "apps/ceramic-printer-sidewinder-x2",
       "template": "presentation",
-      "featured": false
+      "featured": false,
+      "updated": "2026-09-05"
     },
     {
       "slug": "agritech-research-pl",
@@ -43,7 +46,8 @@
       "accent": "#4ade80",
       "source": "apps/agritech-research-pl",
       "template": "blank",
-      "featured": false
+      "featured": false,
+      "updated": "2026-09-04"
     },
     {
       "slug": "xc60-campkit",
@@ -53,7 +57,8 @@
       "accent": "#ff5c35",
       "source": "apps/xc60-campkit",
       "template": "presentation",
-      "featured": true
+      "featured": true,
+      "updated": "2026-09-04"
     },
     {
       "slug": "signal-deck",
@@ -63,7 +68,8 @@
       "accent": "#9b87f5",
       "source": "apps/signal-deck",
       "template": "presentation",
-      "featured": true
+      "featured": true,
+      "updated": "2026-09-03"
     },
     {
       "slug": "northstar-landing",
@@ -73,7 +79,8 @@
       "accent": "#5eead4",
       "source": "apps/northstar-landing",
       "template": "landing",
-      "featured": true
+      "featured": true,
+      "updated": "2026-09-03"
     },
     {
       "slug": "pulse-dashboard",
@@ -83,7 +90,8 @@
       "accent": "#ffb86b",
       "source": "apps/pulse-dashboard",
       "template": "dashboard",
-      "featured": true
+      "featured": true,
+      "updated": "2026-09-03"
     }
   ]
 }

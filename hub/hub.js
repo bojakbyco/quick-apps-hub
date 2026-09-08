@@ -4,11 +4,14 @@ let apps = [];
 function render(filter = 'all') {
   list.replaceChildren();
   const visible = apps.filter(app => filter === 'all' || app.category === filter);
+  visible.sort((a, b) => String(b.updated || '').localeCompare(String(a.updated || '')));
   visible.forEach((app, index) => {
     const card = template.content.firstElementChild.cloneNode(true);
     card.style.setProperty('--accent', app.accent);
     card.querySelector('.number').textContent = String(index + 1).padStart(2, '0');
     card.querySelector('.category').textContent = app.category;
+    const updatedEl = card.querySelector('.updated');
+    if (updatedEl) updatedEl.textContent = app.updated ? `Aktualizacja: ${app.updated}` : '';
     card.querySelector('h3').textContent = app.name;
     card.querySelector('p').textContent = app.description;
     card.querySelector('a').href = `/apps/${app.slug}/`;
