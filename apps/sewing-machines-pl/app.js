@@ -14,7 +14,9 @@ const MODELS = [
   {name:"Minerva M832B", price:649, press:1, hook:"wahadłowy", weight:6.0, power:60, spm:850, stitches:36, rating:4.95, opinions:"4,9–5/5 (~95 opinii)", note:"Następca Next 363 — najwięcej maszyny za złotówkę w zestawieniu.", best:true},
   {name:"Minerva HS1000", price:954, press:1, hook:"rotacyjny", weight:6.9, power:100, spm:850, stitches:34, rating:4.6, opinions:"4,6/5 (Allegro 32)", note:"Pełny metal, silnik servo 100 W, 7-punktowy transport, dziurka 1-stopn., ścieg do 6 mm, stopka pływająca w zestawie."},
   {name:"Janome 1522", price:855, press:1, hook:"wahadłowy", weight:6.5, power:60, spm:860, stitches:25, rating:4.9, opinions:"4,9/5 (Ceneo 43)", note:"Podbudowa HD, przestrzeń robocza 10,5×11 cm (rekord), stopy Matic; od 855 zł (Dark Grey), Light Grey 900 zł.", best:true},
-  {name:"Husqvarna Viking E20", price:770, press:1, hook:"wahadłowy", weight:6.5, power:60, spm:750, stitches:32, rating:4.9, opinions:"4,9/5 (ME 11)", note:"Szwedzka marka premium za ~750 zł; opuszczane ząbki transportu; mało opinii PL."}
+  {name:"Husqvarna Viking E20", price:770, press:1, hook:"wahadłowy", weight:6.5, power:60, spm:750, stitches:32, rating:4.9, opinions:"4,9/5 (ME 11)", note:"Szwedzka marka premium za ~750 zł; opuszczane ząbki transportu; mało opinii PL."},
+  {name:"Texi Bro", price:490, press:1, hook:"wahadłowy", weight:6.8, power:100, spm:750, stitches:24, rating:0, opinions:"brak ocen PL (nowość)", note:"Marka Strima (Poznań); pierwszy domowy silnik AC Servo 100 W; 3-stop. podnośnik stopki, płytka do haftu; wolniejsze tempo i węższy zygzak (4 mm)."},
+  {name:"Texi Force", price:690, press:1, hook:"wahadłowy", weight:6.4, power:100, spm:1100, stitches:23, rating:0, opinions:"5/5 (Muziker, 2 oceny)", note:"Najtaniej 1100/min + servo 100 W na rynku; 1-stop. dziurka, szer. ściegu 6 mm, 3 pozycje igły; HD z regulacją docisku."}
 ];
 
 const fmtPrice = v => v ? v.toLocaleString("pl-PL") + " zł" : "—";

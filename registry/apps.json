@@ -8,14 +8,14 @@
     {
       "slug": "sewing-machines-pl",
       "name": "Maszyny do szycia — porównanie 2026",
-      "description": "Interaktywne porównanie 14 maszyn do szycia: sortowalna tabela techniczna, zaznaczanie modeli do porównania, budżety i werdykt.",
+      "description": "Interaktywne porównanie 16 maszyn do szycia (m.in. Texi Bro/Force): sortowalna tabela techniczna, zaznaczanie modeli do porównania, budżety i werdykt.",
       "category": "Prezentacja",
       "accent": "#a78bfa",
       "source": "apps/sewing-machines-pl",
       "template": "presentation",
       "created": "2026-09-05",
       "featured": false,
-      "updated": "2026-09-08"
+      "updated": "2026-09-09"
     },
     {
       "slug": "smart-pedal",
