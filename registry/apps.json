@@ -6,6 +6,18 @@
   },
   "apps": [
     {
+      "slug": "gleba-ph-npk-corg-realtime",
+      "name": "pH · NPK · Corg — pomiar w czasie rzeczywistym",
+      "description": "Co mierzą pH, NPK i węgiel organiczny gleby oraz jak działa pomiar real-time: elektrody ISE/ISFET, spektroskopia NIR/MIR, porównanie metod i kalkulator Nernsta.",
+      "category": "Raport badawczy",
+      "accent": "#4ade80",
+      "source": "apps/gleba-ph-npk-corg-realtime",
+      "template": "blank",
+      "featured": false,
+      "created": "2026-09-10",
+      "updated": "2026-09-10"
+    },
+    {
       "slug": "sewing-machines-pl",
       "name": "Maszyny do szycia — porównanie 2026",
       "description": "Interaktywne porównanie 16 maszyn do szycia (m.in. Texi Bro/Force): sortowalna tabela techniczna, zaznaczanie modeli do porównania, budżety i werdykt.",

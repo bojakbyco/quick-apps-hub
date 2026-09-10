@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>pH · NPK · Corg — pomiar w czasie rzeczywistym</title>
+<meta name="description" content="Co to jest pH, NPK i materia organiczna gleby, jak mierzy się je w czasie rzeczywistym: elektrody jonoselektywne, ISFET, NIRS, sondy stacjonarne — przegląd metod i dokładności.">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<a class="skip" href="#main">Przejdź do treści</a>
+
+<header class="hero">
+  <p class="kicker">Agritech · Podstawy sensorów glebowych</p>
+  <h1>pH · NPK · Corg<br><span class="muted">pomiar w czasie rzeczywistym</span></h1>
+  <p class="lead">Co dokładnie mierzą te parametry, dlaczego klasyczna analiza laboratoryjna
+  nie nadąża za dynamiką pola i jakimi metodami — elektrochemicznymi i optycznymi —
+  mierzy się je dzisiaj na żywo, w glebie, bez wywożenia próbek do laboratorium.</p>
+  <nav class="toc" aria-label="Spis treści">
+    <a href="#co-to">Co to jest</a>
+    <a href="#dlaczego-realtime">Dlaczego real-time</a>
+    <a href="#metody">Metody pomiaru</a>
+    <a href="#tabela">Porównanie metod</a>
+    <a href="#symulator">Kalkulator Nernsta</a>
+    <a href="#praktyka">Wybór w praktyce</a>
+    <a href="#slownik">Słowniczek</a>
+    <a href="#zrodla">Źródła</a>
+  </nav>
+</header>
+
+<main id="main">
+
+<section id="co-to" class="card">
+  <h2>1. Co to dokładnie jest</h2>
+
+  <article class="param" id="ph">
+    <h3>pH gleby <span class="unit">— kwasowość, jednostki 3–10</span></h3>
+    <p><strong>pH to ujemny logarytm aktywności jonów wodorowych H⁺</strong> w roztworze glebowym:
+    pH = −log[H⁺]. Gleba o pH 5 ma dziesięciokrotnie więcej H⁺ niż pH 6 — skala jest
+    logarytmiczna, dlatego „mała” różnica pH to duża różnica chemii.</p>
+    <p>Większość upraw polowych najlepiej rośnie przy pH 6,0–7,0. pH decyduje o
+    <em>dostępności składników</em>: przy pH &lt; 5,5 fosfor wiąże się z żelazem i glinem
+    i staje się niedostępny; przy pH &gt; 7,5 trudno dostępne są mikroelementy (Zn, Mn, Fe).
+    To parametr „bramkowy” — poprawny nawożenie NPK nie pomoże, jeśli pH blokuje pobieranie.</p>
+  </article>
+
+  <article class="param" id="npk">
+    <h3>NPK <span class="unit">— azot, fosfor, potas w mg/kg</span></h3>
+    <p><strong>N</strong> — azot: buduje białko i plon. W glebie występuje dynamicznie jako
+    azotan NO₃⁻ (mobilny, wymywalny) i amon NH₄⁺ (słabiej ruchomy). Zmienia się z tygodnia
+    na tydzień wraz z temperaturą, wilgotnością i pobieraniem przez rośliny.</p>
+    <p><strong>P</strong> fosfor i <strong>K</strong> potas: ruch obu w glebie jest wolny,
+    zawartość zmienia się w skali miesięcy/lat. Stąd klasyczne zalecenia nawozowe oparte na
+    próbach zbieranych raz na kilka lat.</p>
+    <p class="note">Ważne rozróżnienie: sonda mierzy <em>formy przyswajalne</em> (jony w
+    roztworze glebowym i na kompleksie sorpcyjnym), a nie azot ogółem. Dla nawożenia to
+    właśnie frakcja przyswajalna się liczy.</p>
+  </article>
+
+  <article class="param" id="corg">
+    <h3>Corg / SOM <span class="unit">— węgiel organiczny, % masy</span></h3>
+    <p><strong>Corg (SOC)</strong> to węgiel związany w materii organicznej gleby — resztkach
+    roślinnych, próchnicy, organizmach glebowych. <strong>SOM</strong> (materia organiczna)
+    to ta sama frakcja liczona razem z innymi pierwiastkami; w praktyce przyjmuje się
+    przybliżenie <strong>SOM ≈ Corg × 1,72</strong>.</p>
+    <p>Corg to wskaźnik „zdrowia” gleby: poprawia strukturę, pojemność wodną i buforowanie
+    składników. Zmienia się bardzo wolno — rocznie o ułamki punktu procentowego — ale jest
+    kluczowy dla bonitacji i coraz częściej dla <em>schematów węglowych</em> (płatności za
+    sekwestrację CO₂), gdzie liczy się zmiana Corg w czasie.</p>
+  </article>
+</section>
+
+<section id="dlaczego-realtime" class="card">
+  <h2>2. Dlaczego „w czasie rzeczywistym”</h2>
+  <p>Standard: próba gleby → wysyłka → ekstrakcja w laboratorium → wynik po 1–4 tygodniach.
+  To wystarcza do wapnowania czy planu nawozowego na sezon, ale:</p>
+  <ul>
+    <li><strong>Azot jest zmienny</strong> — NO₃⁻ wymywają deszcze, mineralizacja zależy od
+    temperatury. Wynik sprzed miesiąca o bieżącym stanie azotu mówi niewiele.</li>
+    <li><strong>Pole nie jest jednorodne</strong> — pH i P/K potrafią różnić się kilkukrotnie
+    w obrębie jednego agregatu. Jedna próba uśredniona z hektara maskuje tę zmienność.</li>
+    <li><strong>Okno nawożenia jest krótkie</strong> — decyzja o dawce azotu musi zapaść
+    „teraz”, w sezonie, a nie po powrocie wyniku z laboratorium.</li>
+  </ul>
+  <p>Stąd dwa nurty pomiaru real-time:</p>
+  <ol class="nurty">
+    <li><strong>On-the-go</strong> — czujnik na maszynie (agregat, siewnik, opryskiwacz),
+    pomiar co kilka–kilkanaście sekund wraz z pozycją GPS → mapa zmienności pola i dawka
+    zróżnicowana w trakcie przejazdu.</li>
+    <li><strong>In-situ / stacjonarny</strong> — sonda wbita na stałe w profil gleby,
+    odczyt co kilkanaście minut–godzin, trend w czasie (np. dynamika azotu po deszczu).</li>
+  </ol>
+</section>
+
+<section id="metody" class="card">
+  <h2>3. Jak to się mierzy w czasie rzeczywistym</h2>
+
+  <article class="method">
+    <h3>3.1. Elektrody jonoselektywne (ISE) — workhorse NPK i pH</h3>
+    <p><strong>Zasada:</strong> membrana (szklana dla H⁺, polimerowa PVC z jonoforem dla
+    NO₃⁻, K⁺, NH₄⁺) przepuszcza praktycznie tylko jeden rodzaj jonu. Powstaje różnica
+    potencjałów między elektrodą pomiarową a odniesienia, opisana <a href="#symulator">równaniem
+    Nernsta</a>: napięcie zmienia się o ~59 mV na dekadę stężenia (dla jonu jednorednkowego).
+    Z napięcia liczy się aktywność jonu — to ta sama technika, którą laboratoryjne pH-metry
+    używają od dekad.</p>
+    <p><strong>Real-time w praktyce:</strong> system pobiera porcję gleby, dozuje roztwór
+    ekstrakcyjny (np. Kelowna), mierzy napięcie i płucze elektrody — pełny cykl pomiaru
+    NO₃⁻/K⁺ w <strong>2–15 s</strong> (Adamchuk i in.; systemy ISFET/FIA schodziły poniżej
+    5 s). Weryfikacje USDA ARS na glebach Missouri/Illinois dały zgodność z metodami
+    laboratoryjnymi r² &gt; 0,9 dla NO₃-N i K⁺ w ekstraktach Kelowna.</p>
+    <p><strong>Ograniczenia:</strong> wymaga kalibracji (dryf membrany), odczynnia się przy
+    niskiej wilgotności gleby, jony z szeregu Hofmeistera zakłócają selektywność. Fosfor
+    jest najtrudniejszy — elektrody P (np. z prętem kobaltowym) są mniej stabilne niż
+    azotanowe i potasowe.</p>
+  </article>
+
+  <article class="method">
+    <h3>3.2. ISFET — ISE zabudowany w tranzystorze</h3>
+    <p><strong>Zasada:</strong> membrana jonoselektywna nałożona na bramkę tranzystora
+    polowego. Sygnał zmienia przewodność kanału — detekcja elektronowa zamiast pomiaru
+    wysokiej impedancji. Zalety: miniaturowość (kilka czujników na jednym chipie), małe
+    zakłócenia, szybka odpowiedź, niskie koszty produkcji. Sondy „Sensor-in-Field”
+    (walidowane na polu pszenicy ozimej, Missouri) łączą ISFET/ISE dla NO₃⁻, NH₄⁺, pH,
+    wilgotności, węglika nieorganicznego i SOM w jednej sondzie 46 cm, z zasilaniem
+    bateryjnym i odczytem ciągłym.</p>
+  </article>
+
+  <article class="method">
+    <h3>3.3. Spektroskopia NIR/MIR — „na oko”, bez odczynników</h3>
+    <p><strong>Zasada:</strong> widmo odbicia w bliskiej/średniej podczerwieni
+    (VNIR 350–2500 nm, MIR do 25 000 nm) niosące sygnatury materii organicznej, wilgotności
+    i wybranych składników. Pomiar trwa ułamek sekundy, nic nie zużywa, działa on-the-go na
+    koparce próbek lub w stacjonarnej sondzie. MIR daje gęstsze informacje o Corg niż VNIR.</p>
+    <p><strong>Haczyk:</strong> to metoda <em>pośrednia</em> — wymaga kalibracji
+    chemometrycznej na zbiorze próbek danego regionu i periodicznej rekalibracji na
+    laboratorium (TOC/LOI). Bez lokalnej kalibracji wyniki szybują. Dla Corg działa dobrze;
+    dla bieżącego NO₃⁻ jest notorycznie słaba.</p>
+  </article>
+
+  <article class="method">
+    <h3>3.4. Corg — drogi laboratoryjny vs polowy</h3>
+    <p>Referencja: <strong>TOC/CHNS</strong> (spalanie, najlepsza dokładność) lub
+    <strong>LOI</strong> (wygrzewanie 400–550 °C, tańsze, kalibrowalne do TOC). Oba wymagają
+    laboratorium. W terenie real-time Corg uzyskuje się właśnie przez <strong>NIR/MIR</strong>
+    oraz nowe sondy elektrochemiczne z kompozytami wiążącymi frakcje organiczne (walidacja:
+    SOM sonda 1,9% vs laboratorium 1,98%).</p>
+  </article>
+
+  <article class="method">
+    <h3>3.5. Dobra wiadomość: pH jest łatwe</h3>
+    <p>Szkłana elektroda pH to najdojrzalsza technika w zestawie — on-the-go mapowanie pH
+    (elektroda płaskoprzylegająca na wymuszonym kontakcie z glebą, pomiar 5–15 s na punkt)
+    jest dostępne komercyjnie od lat i ma dokładność ±0,1–0,2 pH. Jeśli zaczynasz od
+    jednego parametru w czasie rzeczywistym — zaczynaj od pH.</p>
+  </article>
+</section>
+
+<section id="tabela" class="card">
+  <h2>4. Porównanie metod <span class="hint">kliknij nagłówek, aby posortować</span></h2>
+  <div class="table-wrap">
+  <table id="cmp">
+    <thead>
+      <tr>
+        <th data-key="param" data-type="text">Parametr</th>
+        <th data-key="metoda" data-type="text">Metoda real-time</th>
+        <th data-key="czas" data-type="text">Czas pomiaru</th>
+        <th data-key="typ" data-type="text">Tryb</th>
+        <th data-key="dokl" data-type="num" title="rzędy wielkości z literatury">Dokładność vs laboratorium</th>
+        <th data-key="koszt" data-type="num">Względny koszt</th>
+        <th data-key="glownaSlabosc" data-type="text">Główna słabość</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>pH</td><td>Szkłana elektroda ISE / ISFET pH</td><td>5–15 s</td><td>On-the-go + stacjonarny</td><td data-num="2">±0,1–0,2 pH (bardzo dobra)</td><td data-num="1">Najniższy</td><td>Zanieczyszczenie/suche elektrody</td></tr>
+      <tr><td>N (NO₃⁻, NH₄⁺)</td><td>ISE / ISFET azotanowa, amonowa</td><td>2–15 s</td><td>On-the-go + stacjonarny</td><td data-num="1">r² &gt; 0,9 vs lab (ekstrakty)</td><td data-num="2">Średni</td><td>Wymaga wilgotności, kalibracja, dryf</td></tr>
+      <tr><td>K</td><td>ISE walencyjna PVC (jonofor)</td><td>2–15 s</td><td>On-the-go</td><td data-num="2">r² &gt; 0,9 po korekcie kalibracyjnej</td><td data-num="2">Średni</td><td>Interferencje jonowe, korekta równaniem</td></tr>
+      <tr><td>P</td><td>ISE z prętem Co / fotometria ekstraktu</td><td>15–60 s</td><td>On-the-go (rzadziej)</td><td data-num="4">Umiarkowana, niestabilna</td><td data-num="4">Wysoki</td><td>Niestabilna membrana, najsłabszy jon</td></tr>
+      <tr><td>Corg / SOM</td><td>NIR/MIR spektroskopia + chemometria</td><td>&lt; 1 s</td><td>On-the-go + stacjonarny</td><td data-num="2">Dobra z lokalną kalibracją</td><td data-num="3">Średni–wysoki</td><td>Kalibracja regionalna, rekalibracje</td></tr>
+      <tr><td>Corg / SOM</td><td>Sonda elektrochemiczna (kompozyt)</td><td>minuty (ciągły)</td><td>Stacjonarny</td><td data-num="2">1,9% vs 1,98% lab (walidacja polowa)</td><td data-num="3">Średni–wysoki</td><td>Młoda technologia, mało niezależnych badań</td></tr>
+      <tr><td>Wszystko (lab)</td><td>Ekstrakcja + ISE/TOC w laboratorium</td><td>1–4 tyg.</td><td>Próbki wysyłane</td><td data-num="0">Referencja</td><td data-num="5">Najwyższy (logistyka)</td><td>Opóźnienie, uśrednianie pola</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="note">„Dokładność” to rzędy wielkości z cytowanych badań, nie specyfikacja
+  produktowa konkretnego urządzenia.</p>
+</section>
+
+<section id="symulator" class="card">
+  <h2>5. Kalkulator: równanie Nernsta na żywo</h2>
+  <p>Tak ISE zamienia napięcie na stężenie. Typowa elektroda azotanowa (NO₃⁻): nachylenie
+  teoretyczne −59,16 mV/dekadę w 25 °C. Przesuń suwaki i zobacz, ile mV „warta” jest
+  dekada stężenia — oraz jak temperatura zmienia wzmocnienie sygnału.</p>
+  <div class="lab">
+    <div class="ctl">
+      <label for="conc">Stężenie NO₃⁻ <output id="concOut" for="conc">31,6 mg/L</output></label>
+      <input type="range" id="conc" min="0" max="1000" value="150">
+    </div>
+    <div class="ctl">
+      <label for="slope">Sprawność elektrody <output id="slopeOut" for="slope">95%</output></label>
+      <input type="range" id="slope" min="80" max="105" value="95">
+    </div>
+    <div class="ctl">
+      <label for="temp">Temperatura <output id="tempOut" for="temp">25 °C</output></label>
+      <input type="range" id="temp" min="0" max="40" value="25">
+    </div>
+    <div class="readout" role="status" aria-live="polite">
+      <div><span class="big" id="mvOut">−88,9 mV</span><span class="lbl">napięcie względem punktu zerowego 100 mg/L</span></div>
+      <div><span class="big" id="mvdecOut">−56,2 mV/dekadę</span><span class="lbl">nachylenie Nernsta (ujęcie w dekadę stężenia)</span></div>
+      <p id="warn" class="warn" hidden></p>
+    </div>
+  </div>
+</section>
+
+<section id="praktyka" class="card">
+  <h2>6. Wybór metody w praktyce</h2>
+  <ul class="decyzje">
+    <li><strong>Początek / mały areał:</strong> ręczne pH-metry ISE i kolorymetryczne
+    zestawy NPK (próbka + odczynnik, wynik w minutach). To nie jest ciągły pomiar, ale
+    najtańsze wejście w zarządzanie danymi.</li>
+    <li><strong>Mapowanie zmienności pól:</strong> on-the-go pH (dojrzałe, tanie) →
+    wapnowanie precyzyjne. Potem K i NO₃ on-the-go przy zbiorze/orkie.</li>
+    <li><strong>Nawożenie azotem w sezonie:</strong> stacjonarna sonda NO₃⁻/NH₄⁺ w profilu
+    + wilgotność; laboratorium raz na sezon jako kotwica kalibracyjna.</li>
+    <li><strong>Corg / schematy węglowe:</strong> bazowa próba laboratoryjna (TOC) co 2–4
+    lata + spektroskopia NIR do interpolacji między punktami. Nie kupuj „czujnika Corg”
+    bez lokalnej kalibracji.</li>
+    <li><strong>Fosfor:</strong> najuczciwiej wciąż laboratorium; czujniki P istnieją, ale
+    ich stabilność w polu jest najsłabsza z całego NPK.</li>
+  </ul>
+  <p class="note">Niezależnie od metody: każdy czujnik real-time kalibruj against
+  laboratorium na próbach z twoich pól. Dane bez lokalnej kalibracji to tylko ładne wykresy.</p>
+</section>
+
+<section id="slownik" class="card">
+  <h2>7. Słowniczek</h2>
+  <dl class="gloss">
+    <dt>ISE</dt><dd>Ion-selective electrode — elektroda z membraną reagującą na jeden jon; pomiar napięcia (potencjometria).</dd>
+    <dt>ISFET</dt><dd>Ion-selective field-effect transistor — ISE na bramce tranzystora; mniejsze, szybsze, integrowalne w chipy.</dd>
+    <dt>Nernst</dt><dd>Równanie wiążące napięcie elektrody z aktywnością jonu; ~59,2 mV/dekadę w 25 °C dla jonów 1-wartościowych.</dd>
+    <dt>Ekstrakcja</dt><dd>Wymywanie składników przyswajalnych z gleby roztworem (np. Kelowna) przed pomiarem.</dd>
+    <dt>NIR / MIR</dt><dd>Spektroskopia bliskiej/średniej podczerwieni; pomiar pośredni wymagający kalibracji chemometrycznej.</dd>
+    <dt>TOC / LOI</dt><dd>Laboratoryjne metody Corg: spalanie (TOC/CHNS) i wygrzewanie (loss-on-ignition).</dd>
+    <dt>On-the-go</dt><dd>Pomiar na maszynie w trakcie przejazdu po polu, z georeferencją GPS.</dd>
+    <dt>In-situ</dt><dd>Sonda pozostająca w glebie, pomiar cykliczny na miejscu.</dd>
+  </dl>
+</section>
+
+<section id="zrodla" class="card">
+  <h2>8. Źródła</h2>
+  <ol class="refs">
+    <li>Adamchuk V.I., Hummel J.W., Morgan M.T., Upadhyaya S.K. (2004). <em>On-the-go soil sensors for precision agriculture.</em> Computers and Electronics in Agriculture 44:71–91.</li>
+    <li>Kim H.J., Sudduth K.A., Hummel J.W. (2009). <em>Sensing Nitrate and Potassium Ions in Soil Extracts Using Ion-Selective Electrodes.</em> USDA ARS / Soil Sci. Soc. Am. J. 73(2):685–695 — r² &gt; 0,9 dla NO₃-N i K w ekstraktach Kelowna.</li>
+    <li>Kweon Y. i in. (2025). <em>SODS: Soil Health On-Demand Sensors — A Multi Parameter Field Study with Temporal Monitoring.</em> Sensors/PMC12158370 — walidacja polowa sond stacjonarnych (NO₃, NH₄, SOM, węgiel nieorganiczny).</li>
+    <li><em>Review — The „Real-Time” Revolution for In situ Soil Nutrient Sensing.</em> J. Electrochem. Soc. (IOPscience) — przegląd ISE/ISFET/NIRS, wady i zalety.</li>
+    <li><em>Development of electrochemical sensors for quick detection of environmental NPK ions.</em> RSC Advances (2024), 14:9760–9794.</li>
+    <li><em>Handheld In Situ Methods for Soil Organic Carbon Assessment.</em> Sustainability 16(13):5592 (MDPI, 2024) — VNIR vs MIR dla Corg.</li>
+    <li><em>Emerging techniques for soil carbon measurements.</em> CCAFS Working Paper 2 — TOC/CHNS jako referencja dla SOC.</li>
+  </ol>
+</section>
+
+</main>
+
+<footer class="foot">
+  <p>Przegląd metod — dokładności są rzędami wielkości z literatury, nie specyfikacjami produktów.
+  <a href="https://apps.dev.jakbyco.com/">← inne aplikacje</a></p>
+</footer>
+
+<script src="./app.js"></script>
+</body>
+</html>
