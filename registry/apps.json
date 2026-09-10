@@ -6,6 +6,18 @@
   },
   "apps": [
     {
+      "slug": "uav-agri-biznesplan",
+      "name": "Drony w polu — biznes plan UAV",
+      "description": "Biznes plan: drony UAV (opryski, próbki gleby, pasterstwo bydła głosem właściciela) + roboty polowe kolowe. Rynek, katalog zakupowy, prawo EASA, dotacje FENG/EIC, unit economics.",
+      "category": "Raport badawczy",
+      "accent": "#4ade80",
+      "source": "apps/uav-agri-biznesplan",
+      "template": "blank",
+      "featured": false,
+      "created": "2026-09-10",
+      "updated": "2026-09-10"
+    },
+    {
       "slug": "gleba-ph-npk-corg-realtime",
       "name": "pH · NPK · Corg — pomiar w czasie rzeczywistym",
       "description": "Co mierzą pH, NPK i węgiel organiczny gleby oraz jak działa pomiar real-time: elektrody ISE/ISFET, spektroskopia NIR/MIR, porównanie metod i kalkulator Nernsta.",
