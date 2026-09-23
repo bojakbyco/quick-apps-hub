@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Solar Sentry — solarny strażnik działki: wideo PIR, odstraszanie dźwiękiem, PWA</title>
+<meta name="description" content="Prześwietlenie budżetowego, solarnego strażnika działki: czujnik PIR budzi kamerę ESP32, wysyła klip na serwer i push do użytkownika, a głośnik odstrasza sarny i dziki dźwiękami. Budżet energii, koszty, prawo w Polsce, wymagania PWA.">
+<link rel="stylesheet" href="./style.css?v=1">
+<script defer src="./app.js?v=1"></script>
+</head>
+<body>
+<a class="skip" href="#main">Przejdź do treści</a>
+
+<header class="hero">
+  <p class="kicker">Agritech · Solar IoT · Strażnik pola</p>
+  <h1>Solar Sentry<br><span class="muted">solarny strażnik działki</span></h1>
+  <p class="lead">Tania, autonomiczna maszyna na stojaku z panelem fotowoltaicznym:
+  czujnik ruchu budzi kamerę, klip leci na serwer i dostajesz push na telefon,
+  a głośnik może w tym samym momencie wystraszyć sarnę czy dzika dźwiękiem.
+  Poniżej: jak to działa, czy jest legalne, ile ciągnie prądu, ile kosztuje
+  i co musi spełniać aplikacja PWA, która to obsługuje.</p>
+  <nav class="toc" aria-label="Spis treści">
+    <a href="#koncept">Koncept</a>
+    <a href="#przeplyw">Przepływ zdarzenia</a>
+    <a href="#odstraszanie">Dźwięki odstraszania</a>
+    <a href="#prawo">Prawo w Polsce</a>
+    <a href="#energia">Budżet energii</a>
+    <a href="#koszty">Koszty i cena</a>
+    <a href="#pwa">Wymagania PWA</a>
+    <a href="#zrodla">Źródła</a>
+  </nav>
+</header>
+
+<main id="main">
+
+<section id="koncept" class="card">
+  <h2>1. Koncept — co to właściwie jest</h2>
+  <p><strong>Solar Sentry to strażnik pola klasy „śpiącej kamery”:</strong> zamiast
+  ciągłego nagrywania (jak kamera IP, która pali 3–5 W non stop) urządzenie
+  <em>śpi</em>, a budzi je dopiero czujnik ruchu PIR. Wtedy robi zdjęcie lub krótki
+  klip, wysyła go na serwer, odpala opcjonalny dźwięk odstraszający i wraca do snu.
+  Prąd doładowuje mały panel PV, więc stojak stoi w polu cały sezon bez kabli.</p>
+  <div class="grid2">
+    <article class="mini">
+      <h3>Funkcje rdzenia</h3>
+      <ul>
+        <li>Detekcja ruchu PIR (zasięg ~7 m, kąt ~120°) — budzi układ z deep sleep</li>
+        <li>Zdjęcie / klip wideo 5–20 s, upload przez Wi-Fi lub 4G</li>
+        <li>Push do telefonu: „ruch o 04:12 — prawdopodobnie sarna”</li>
+        <li>Głośnik z biblioteką dźwięków odstraszających, odpalanym zdalnie lub automatycznie</li>
+        <li>Sensory: temperatura + wilgotność (DHT22), opcjonalnie mikrofon</li>
+      </ul>
+    </article>
+    <article class="mini">
+      <h3>Dlaczego to ma sens ekonomiczny</h3>
+      <ul>
+        <li>Fotopułapka 4G z push: 680–1000 zł i <strong>nie odstrasza</strong></li>
+        <li>Płoszka z armatką: tania, ale hałaśliwa i regulowana prawnie</li>
+        <li>Ten projekt: oba światy za ~200–400 zł części — wideo + aktywne odstraszanie</li>
+        <li>Pobór prądu rzędu 0,1–0,2 Ah/dobę zamiast 1,5–3 Ah/dobę kamery IP</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+<section id="przeplyw" class="card">
+  <h2>2. Przepływ zdarzenia — od ruchu do pusha</h2>
+  <p>Cała magia to sekwencja <em>śpij → obudź się → zareaguj → śpij</em>. W spoczynku
+  układ ciągnie mikroampery, więc bateria wystarcza na tygodnie bez słońca.</p>
+  <ol class="flow">
+    <li><strong>PIR wykrywa ruch</strong> — sygnał na pin RTC (GPIO13) budzi ESP32 z deep sleep (prąd spoczynkowy ~5 µA…3 mA zależnie od płyty)</li>
+    <li><strong>Kamera robi zdjęcie / klip</strong> — burst ~250 mA przez ~8–10 s</li>
+    <li><strong>Upload na serwer</strong> — Wi-Fi (darmowe) albo modem 4G A7670E/SIM7000 (w polu bez zasięgu Wi-Fi)</li>
+    <li><strong>Serwer zapisuje klip</strong> — opcjonalnie AI rozpoznaje gatunek (sarna / dzik / człowiek)</li>
+    <li><strong>Push do użytkownika</strong> — Web Push / FCM na PWA: „🚨 Ruch 04:12 — klip gotowy”</li>
+    <li><strong>Reakcja odstraszająca</strong> — automatycznie lub jednym przyciskiem z telefonu: z głośnika leci losowy dźwięk (szczekanie psa, wycie wilka, huk)</li>
+    <li><strong>Powrót do snu</strong> — deep sleep do następnego ruchu</li>
+  </ol>
+</section>
+
+<section id="odstraszanie" class="card">
+  <h2>3. Czym odstraszać — i dlaczego to najtrudniejszy problem</h2>
+  <p><strong>Zasadniczy problem: zwierzęta się przyzwyczajają.</strong> Badania nad
+  odstraszaniem zwierząt (ang. <em>wildlife deterrence</em>) są zgodne: każdy stały,
+  przewidywalny bodziec przestaje działać po kilku dniach do 3 tygodni. Dlatego kluczem
+  jest <strong>randomizacja</strong> — losowe dźwięki, losowe odstępy, zmienne źródło.</p>
+  <div class="sound-grid">
+    <article class="sound">
+      <h3>🐕 Szczekanie psa</h3>
+      <p>Najczęstszy wybór „z pudełka”. Skuteczne na sarny i jelenie w krótkim terminie,
+      ale to też bodziec naturalny — zwierzęta uczą się, że pies „nie istnieje",
+      gdy nie ma go w polu widzenia. Rotuj z innymi dźwiękami.</p>
+    </article>
+    <article class="sound">
+      <h3>🐺 Odgłosy drapieżników (wycie wilka, ryk)</h3>
+      <p>Badania terenowe pokazują skrócenie czasu żerowania jeleniowatych nawet o
+      kilkadziesiąt procent po odtworzeniu głosów wilków — ale tylko przez ~2–3 tygodnie,
+      potem habituacja. Najlepsza broń w połączeniu z ruchem (obracająca się atrapa).</p>
+    </article>
+    <article class="sound">
+      <h3>🐦 Alarmowe wołania ptaków</h3>
+      <p>Standard na plantacjach (winnice USA): odgłosy alarmowe + wołania drapieżnych
+      ptaków skutecznie płoszą szpaki i ptaki owocowe. Dla kopytnych — słabo.</p>
+    </article>
+    <article class="sound">
+      <h3>📡 Ultradźwięki (18–25 kHz)</h3>
+      <p>Działają na gryzonie i nornice (słyszą do ~60 kHz). Sarna słyszy do ~30 kHz,
+      więc teoretycznie słyszalne — w praktyce skuteczność na kopytnych słaba,
+      a zwierzęta szybko się przyzwyczajają. Tani par excellence.</p>
+    </article>
+    <article class="sound">
+      <h3>💥 Huk (armatka gazowa / petarda)</h3>
+      <p>Najskuteczniejszy — i najbardziej problematyczny: głośny, budzi sąsiadów,
+      <strong>wymaga zezwoleń</strong> (patrz sekcja prawo), a zwierzyna i tak przyzwyczaja
+      się po ~1–2 tygodniach regularnych strzałów. Odpalać tylko wyjątkowo.</p>
+    </article>
+    <article class="sound">
+      <h3>🌀 Stroboskop + ruch</h3>
+      <p>Bodziec <em>wędrujący</em> (obracające się światło, odblaski, ruchoma atrapa)
+      łamie habituację lepiej niż dźwięk statyczny. Tani LED + serwo to duży zysk
+      skuteczności za grosze.</p>
+    </article>
+  </div>
+  <div class="tip">
+    <strong>Zasada projektowania odstraszacza:</strong> losowe źródło (funkcja <code>random()</code>
+    wybiera z puli: pies / wilk / alarm ptasi), losowe odstępy (np. 30 s–15 min),
+    tylko po realnym zdarzeniu ruchu, nigdy cyklicznie o stałej porze. Do tego rotacja
+    playlisty co kilka dni. To najtańszy sposób na opóźnienie habituacji.
+  </div>
+</section>
+
+<section id="prawo" class="card">
+  <h2>4. Prawo w Polsce — co wolno, a co wymaga zgody</h2>
+  <p class="warn"><strong>Zastrzeżenie:</strong> to przegląd przepisów, nie porada prawna.
+  Interpretacje organów bywają różne; w konkretnej sprawie warto zapytać RDOŚ / PZŁ
+  albo prawnika. Poniższe pochodzi m.in. z oficjalnej informacji gminy Mrozy (V 2026)
+  o płoszeniu zwierząt niszczących uprawy.</p>
+  <div class="grid2">
+    <article class="mini">
+      <h3>Zasada generalna</h3>
+      <ul>
+        <li><strong>Zakaz umyślnego płoszenia i niepokojenia dzikich zwierząt</strong> — to fundament.</li>
+        <li>Gatunki chronione (ptaki, żurawie, szpaki…): ustawa o ochronie przyrody,
+        art. 52 ust. 1 pkt 11 — zakaz płoszenia. Odstępstwo: <strong>pisemne zezwolenie RDOŚ</strong>
+        (art. 56 ust. 2 i 4).</li>
+        <li>Zwierzyna łowna (dziki, jelenie, sarny, daniele): Prawo łowieckie,
+        art. 9 ust. 1 pkt 2 — zakaz płoszenia. Odstępstwo: <strong>zgoda Marszałka Województwa</strong>
+        po opinii Polskiego Związku Łowieckiego (art. 15 ust. 2).</li>
+        <li>Sam zapis z kamery (fotopułapka) — <strong>legalny</strong>, to bierny monitoring.</li>
+      </ul>
+    </article>
+    <article class="mini">
+      <h3>Co to znaczy w praktyce</h3>
+      <ul>
+        <li><strong>Nagrywanie i push</strong> — bez problemu: monitoring własnej działki.</li>
+        <li><strong>Dźwięki naturalne (szczekanie psa, wilk)</strong> — szara strefa: formalnie
+        to płoszenie, praktycznie trudne do egzekwowania, ale ryzyko sądowe/administracyjne istnieje.</li>
+        <li><strong>Armatka hukowa / huk</strong> — wymaga zgody jak wyżej (marszałek / RDOŚ).</li>
+        <li><strong>Godziny 22–6:</strong> zakłócanie spokoju nocnego — wykroczenie
+        (art. 51 Kodeksu wykroczeń, mandat/grzywna). Odstraszanie tylko 6:00–22:00.</li>
+        <li><strong>Sąsiedzi:</strong> immisje ponad przeciętną miarę — art. 144 Kodeksu cywilnego;
+        hałas może rodzić roszczenia cywilne. Poinformuj sąsiadów i odsuń urządzenie od zabudowań.</li>
+      </ul>
+    </article>
+  </div>
+  <div class="tip">
+    <strong>Praktyczny wniosek dla produktu:</strong> sprzedawaj urządzenie jako
+    <em>monitoring + dźwięki naturalne</em> (jak budka z psim szczekaniem), z wyraźnym
+    trybem „huk" zablokowanym kodem dla użytkowników ze zgodą. To chroni i Ciebie,
+    i kupującego.
+  </div>
+</section>
+
+<section id="energia" class="card">
+  <h2>5. Budżet energii — ile ciągnie, jaki akumulator</h2>
+  <p>Dwa światy: <strong>klasyczna kamera IP</strong> (ciągłe 3–5 W, prosta, droga w
+  zasilaniu) vs <strong>ESP32-CAM + PIR</strong> (śpi, budzi się na zdarzenie — kilkaset
+  razy mniej energii). Poniżej policz oba na swoich liczbach.</p>
+
+  <div class="tabs" role="tablist" aria-label="Tryb kalkulatora">
+    <button class="tab active" data-tab="esp32" role="tab" aria-selected="true">ESP32 + PIR (rekomendowane)</button>
+    <button class="tab" data-tab="ipcam" role="tab" aria-selected="false">Klasyczna kamera IP</button>
+  </div>
+
+  <div class="tab-panel active" id="panel-esp32">
+    <div class="calc-grid">
+      <div class="controls">
+        <label>Zdarzenia ruchu na dobę <output id="o-events">20</output>
+          <input type="range" id="events" min="1" max="200" value="20" step="1"></label>
+        <label>Czas czuwania na zdarzenie (kamera+WiFi, s) <output id="o-active">10</output>
+          <input type="range" id="active" min="3" max="60" value="10" step="1"></label>
+        <label>Odtwarzanie dźwięku po zdarzeniu (s) <output id="o-sound">20</output>
+          <input type="range" id="sound" min="0" max="120" value="20" step="5"></label>
+        <label>Prąd spoczynkowy płyty (µA) <output id="o-sleep">3000</output>
+          <input type="range" id="sleep" min="5" max="3000" value="3000" step="5"></label>
+        <p class="hint">3000 µA = standardowy ESP32-CAM z regulatorami. Po modyfikacji
+        (usunięcie AMS1117 / zasilanie z pinu 3V3) schodzisz do ~10–100 µA.</p>
+        <label>Panel fotowoltaiczny (W) <output id="o-panel">6</output>
+          <input type="range" id="panel" min="0" max="20" value="6" step="1"></label>
+        <label>Pora roku <output id="o-season">lato</output>
+          <input type="range" id="season" min="0" max="1" value="0" step="1"></label>
+        <p class="hint">Lato PL ≈ 3,5 kWh/m²/dzień, zima ≈ 0,7 kWh/m²/dzień; panel
+        6V 2–6W realnie oddaje tam ~25–40% mocy znamionowej w ciągu dnia.</p>
+      </div>
+      <div class="results">
+        <div class="metric"><span class="m-label">Pobór na dobę</span><span class="m-value" id="esp-day">—</span></div>
+        <div class="metric"><span class="m-label">Zapas z panelu na dobę</span><span class="m-value" id="esp-solar">—</span></div>
+        <div class="metric"><span class="m-label">18650 3000 mAh — dni bez słońca</span><span class="m-value" id="esp-days">—</span></div>
+        <div class="metric"><span class="m-label">Wniosek</span><span class="m-value" id="esp-verdict">—</span></div>
+      </div>
+    </div>
+    <p class="note">Uproszczenie: napięcie systemu 3,7 V (Li-ion), sprawność toru zasilania ~85%.
+    Burst kamery + WiFi: średnio 250 mA. Głośnik 3 W: ~500 mA podczas odtwarzania.</p>
+  </div>
+
+  <div class="tab-panel" id="panel-ipcam">
+    <div class="calc-grid">
+      <div class="controls">
+        <label>Pobór kamery IP (W) <output id="o-ipw">4</output>
+          <input type="range" id="ipw" min="2" max="15" value="4" step="0.5"></label>
+        <p class="hint">Typowe kamery IP (Reolink, Hikvision, Dahua): 2–6 W bez IR LED,
+        5–10 W z podświetleniem nocnym. Fotopułapki 4G w trybie czuwania: 0,1–0,5 W,
+        w akcji 1–3 W.</p>
+        <label>Praca na dobę (h) <output id="o-iph">24</output>
+          <input type="range" id="iph" min="1" max="24" value="24" step="1"></label>
+        <label>Napięcie systemu (V) <output id="o-ipv">12</output>
+          <input type="range" id="ipv" min="3.7" max="48" value="12" step="0.1"></label>
+        <label>Dni autonomii (bez słońca) <output id="o-ipd">3</output>
+          <input type="range" id="ipd" min="1" max="10" value="3" step="1"></label>
+        <label>Rodzaj akumulatora: <output id="o-iptype">LiFePO₄ (DoD 80%)</output>
+          <input type="range" id="iptype" min="0" max="1" value="0" step="1"></label>
+      </div>
+      <div class="results">
+        <div class="metric"><span class="m-label">Energia na dobę</span><span class="m-value" id="ip-wh">—</span></div>
+        <div class="metric"><span class="m-label">Pojemność akumulatora (Ah)</span><span class="m-value" id="ip-ah">—</span></div>
+        <div class="metric"><span class="m-label">Panel PV potrzebny (W)</span><span class="m-value" id="ip-panel">—</span></div>
+        <div class="metric"><span class="m-label">Wniosek</span><span class="m-value" id="ip-verdict">—</span></div>
+      </div>
+    </div>
+    <p class="note">Panel dobierany na najgorszy miesiąc (grudzień, ~0,7 kWh/m²/dzień):
+      potrzebna energia Wh/dobę ÷ ~0,25 (sprawność realna) ≈ moc panelu. Stąd kamera IP
+      96 Wh/dobę (4 W × 24 h) wymaga ~380 W panelu i ~25 Ah akumulatora 12 V — koszt
+      rzędu 1500+ zł. ESP32 z PIR robi to za 6 W panelu i jedną ogniwo 18650.</p>
+  </div>
+</section>
+
+<section id="koszty" class="card">
+  <h2>6. Koszty — BOM, produkcja, cena sprzedaży</h2>
+  <p>Ceny orientacyjne z rynku PL/IoT (2026, ceny pojedyncze; w partii spadają 30–50%):</p>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Element</th><th>Rola</th><th>Wersja Wi-Fi</th><th>Wersja 4G</th></tr></thead>
+    <tbody>
+      <tr><td>ESP32-CAM AI-Thinker (OV2640)</td><td>MCU + kamera + Wi-Fi</td><td>45–60 zł</td><td>45–60 zł</td></tr>
+      <tr><td>PIR HC-SR501</td><td>budzenie z deep sleep</td><td>6–10 zł</td><td>6–10 zł</td></tr>
+      <tr><td>Panel PV 6V 5–10 W (laminowany)</td><td>zasilanie solarne</td><td>40–90 zł</td><td>40–90 zł</td></tr>
+      <tr><td>CN3791 (MPPT 6V) + BMS 1S</td><td>ładowanie + ochrona baterii</td><td>15–25 zł</td><td>15–25 zł</td></tr>
+      <tr><td>Bateria 18650 3000 mAh (lub 2×)</td><td>magazyn energii</td><td>25–80 zł</td><td>25–80 zł</td></tr>
+      <tr><td>Głośnik 3 W + MAX98357A</td><td>odstraszanie dźwiękiem</td><td>18–30 zł</td><td>18–30 zł</td></tr>
+      <tr><td>DHT22 (temp. + wilgotność)</td><td>telemetria</td><td>10–16 zł</td><td>10–16 zł</td></tr>
+      <tr><td>Mikrofon INMP441 (I2S)</td><td>nasłuch / bioakustyka</td><td>12–20 zł</td><td>12–20 zł</td></tr>
+      <tr><td>Modem 4G A7670E/SIM7000 + SIM</td><td>łączność w polu</td><td>—</td><td>90–160 zł</td></tr>
+      <tr><td>Obudowa drukowana 3D (PETG, ~200 g)</td><td>stojak + hermetyzacja</td><td>8–15 zł</td><td>8–15 zł</td></tr>
+      <tr><td>Kable, złącza, uszczelki, montaż</td><td>—</td><td>10–20 zł</td><td>10–20 zł</td></tr>
+    </tbody>
+    <tfoot>
+      <tr><td colspan="2"><strong>SUMA (części, 1 szt.)</strong></td><td><strong>~190–360 zł</strong></td><td><strong>~280–560 zł</strong></td></tr>
+    </tfoot>
+  </table>
+  </div>
+
+  <div class="calc-grid">
+    <div class="controls">
+      <label>Koszt części wersji (zł) <output id="o-bom">300</output>
+        <input type="range" id="bom" min="150" max="700" value="300" step="10"></label>
+      <label>Koszt montażu + marża części (%) <output id="o-asm">30</output>
+        <input type="range" id="asm" min="0" max="100" value="30" step="5"></label>
+      <label>Marża sprzedażowa (%) <output id="o-marza">55</output>
+        <input type="range" id="marza" min="10" max="200" value="55" step="5"></label>
+      <label>VAT 23% dla konsumenta</label>
+      <p class="hint">Pułapki cenowe rynku: fotopułapka 4G bez odstraszania 680–1000 zł;
+      odstraszacze dźwiękowe 150–400 zł; dobry monitoring solarny 800–1500 zł.</p>
+    </div>
+    <div class="results">
+      <div class="metric"><span class="m-label">Koszt wytworzenia (zł)</span><span class="m-value" id="cost-make">—</span></div>
+      <div class="metric"><span class="m-label">Cena netto (zł)</span><span class="m-value" id="cost-net">—</span></div>
+      <div class="metric"><span class="m-label">Cena brutto dla klienta (zł)</span><span class="m-value" id="cost-gross">—</span></div>
+      <div class="metric"><span class="m-label">Wniosek</span><span class="m-value" id="cost-verdict">—</span></div>
+    </div>
+  </div>
+  <p class="note">Przy 100 szt. wersji 4G części schodzą do ~300–350 zł/szt.
+  Sprzedaż 999–1299 zł brutto jest realna, bo konkurencyjna fotopułapka 4G
+  (680–1000 zł) nie odstrasza i nie mierzy T/H. Unikatowa wartość = monitoring + push + odstraszanie w jednym.</p>
+</section>
+
+<section id="pwa" class="card">
+  <h2>7. Aplikacja PWA — wymagania funkcjonalne</h2>
+  <p>Klient to <strong>PWA instalowalne</strong> (bez sklepów). Backend osobny.
+  Minimalny kontrakt techniczny:</p>
+  <div class="grid2">
+    <article class="mini">
+      <h3>Frontend (PWA)</h3>
+      <ul>
+        <li><code>manifest.json</code>: name, icons 192/512, display: standalone, theme_color</li>
+        <li><strong>Service Worker</strong>: precache statyków, cache-first, offline fallback (ostatni klip)</li>
+        <li><strong>Web Push</strong> (VAPID): subskrypcja push, <code>showNotification</code> z miniaturą klipu</li>
+        <li>Lista zdarzeń: kafelek czasu + miniatura + gatunek (jeśli AI)</li>
+        <li>Odtwarzacz klipu inline + przycisk „Odpal dźwięk” (POST na API)</li>
+        <li>Telemetria: wykres T/H, stan baterii, napięcie panelu</li>
+        <li>Ustawienia: tryb odstraszania (auto / ręcznie / wył.), playlistę dźwięków, godziny ciszy 22–6</li>
+        <li>Wake Lock podczas przeglądania na żywo; geolokalizacja urządzeń</li>
+      </ul>
+    </article>
+    <article class="mini">
+      <h3>Backend (minimum)</h3>
+      <ul>
+        <li>Endpoint <code>POST /api/events</code> — odbiór klipów i telemetrii (auth token urządzenia)</li>
+        <li>Magazyn plików: klipy → S3/object storage, miniatury osobno</li>
+        <li><code>POST /api/sound</code> — rozkaz odtwarzania (z kolejką i cooldownem)</li>
+        <li>Push broker: przy zdarzeniu → send Web Push do subskrypcji użytkownika</li>
+        <li>Opcjonalnie: detekcja gatunku (klasyfikator obrazu, np. TensorFlow Lite na serwerze)</li>
+        <li>Aktualizacje OTA firmware: serwer dystrybuuje binarkę ESP32 (HTTP OTA)</li>
+      </ul>
+    </article>
+  </div>
+  <div class="tip">
+    <strong>Pułapki platform:</strong> iOS wysyła Web Push tylko od iOS 16.4+ i tylko
+    dla stron dodanych do ekranu głównego (do tego — wymagany certyfikat Apple w VAPID).
+    Push na Androidzie wymaga sklepu Play lub trybu „instalacja z przeglądarki".
+    HTTPS obowiązkowe dla SW/push/kamery. Alternatywa dla 4G: Telegram Bot API (bez
+    własnego backendu push — wystarczy bot token).
+  </div>
+</section>
+
+<section id="zrodla" class="card">
+  <h2>8. Źródła i dalej</h2>
+  <ul class="sources">
+    <li>UMiG Mrozy, <em>Informacja o podstawach prawnych stosowania armatek hukowych do płoszenia zwierząt</em> (V 2026) — art. 9/15 Prawa łowieckiego, art. 52/56 ustawy o ochronie przyrody, art. 51 K.w., art. 144 K.c.</li>
+    <li>Prawo łowieckie (Dz.U. 1995 nr 147 poz. 713) — zakaz płoszenia zwierzyny łownej i tryb odstępstw.</li>
+    <li>ShillehTek, <em>ESP32-CAM PIR: Solar Off-Grid Motion Camera</em> (2026) — architektura deep sleep + CN3791 + 18650, liczby prądowe (sleep ~5 µA…3 mA, burst ~250 mA, ~0,56 mAh/zdjęcie).</li>
+    <li>Reddit r/esp32, <em>Reducing ESP32-CAM deep sleep current</em> — realne 2,8 mA na standardowej płycie (regulatory AMS1117); modyfikacje.</li>
+    <li>diysolarforum / r/videosurveillance — typowy pobór kamer IP ~5 W, dobór paneli off-grid.</li>
+    <li>GardePro — panele 10–15 W w fotopułapkach solarnych 4G jako punkt odniesienia rynku.</li>
+    <li>Ceneo / Kamami / Allegro — ceny części (PIR od ~5 zł, moduły ESP32-CAM, DHT22).</li>
+    <li>Szpiegujemy / Nocny Łowca — ceny fotopułapek 4G z panelem (680–1000 zł) jako benchmark cenowy.</li>
+  </ul>
+  <p class="note">Liczby energetyczne to estymaty inżynierskie do szacunku budżetu — przed
+  produkcją zmierz realny prąd spoczynkowy własnej płyty i sprawdź zimowe nasłonecznienie
+  swojej lokalizacji.</p>
+</section>
+
+</main>
+<footer>
+  <p>Solar Sentry · analiza koncepcyjna · <a href="/">Quick Apps Hub</a></p>
+</footer>
+</body>
+</html>

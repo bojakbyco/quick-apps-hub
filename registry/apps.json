@@ -6,6 +6,18 @@
   },
   "apps": [
     {
+      "slug": "solar-sentry",
+      "name": "Solar Sentry — solarny strażnik działki",
+      "description": "Koncept taniej solarnej maszyny odstraszającej: PIR budzi kamerę ESP32, klip leci na serwer i push na telefon, głośnik płoszy sarny dźwiękiem. Budżet energii, koszty BOM, legalność w Polsce, wymagania PWA.",
+      "category": "Raport badawczy",
+      "accent": "#4ade80",
+      "source": "apps/solar-sentry",
+      "template": "blank",
+      "featured": false,
+      "created": "2026-09-23",
+      "updated": "2026-09-23"
+    },
+    {
       "slug": "uav-agri-biznesplan",
       "name": "Drony w polu — biznes plan UAV",
       "description": "Biznes plan: drony UAV (opryski, próbki gleby, pasterstwo bydła głosem właściciela) + roboty polowe kolowe. Rynek, katalog zakupowy, prawo EASA, dotacje FENG/EIC, unit economics.",
