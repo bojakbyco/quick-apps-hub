@@ -22,6 +22,7 @@
   <nav class="toc" aria-label="Spis treści">
     <a href="#koncept">Koncept</a>
     <a href="#przeplyw">Przepływ zdarzenia</a>
+    <a href="#rozbiorka">Kamera z rozbiórki</a>
     <a href="#odstraszanie">Dźwięki odstraszania</a>
     <a href="#prawo">Prawo w Polsce</a>
     <a href="#energia">Budżet energii</a>
@@ -168,6 +169,60 @@
     <em>monitoring + dźwięki naturalne</em> (jak budka z psim szczekaniem), z wyraźnym
     trybem „huk" zablokowanym kodem dla użytkowników ze zgodą. To chroni i Ciebie,
     i kupującego.
+  </div>
+</section>
+
+<section id="rozbiorka" class="card">
+  <h2>2.5 Kamera IP z rozbiórki — czy to się opłaca?</h2>
+  <p><strong>Pomysł:</strong> kupić gotową kamerę IP za ~230 zł (np. Tapo C200/C225,
+  Xiaomi C300), rozebrać, wyjąć moduł kamerowy i zamontować go w drukowanej obudowie
+  ze stojakiem PV. Zaleta jest realna: <strong>typowy moduł IP daje obraz 2K/3MP
+  z sensora 1/2.7″ z dużym obiektywem i dobrą matrycą — wyraźnie lepszy niż
+  ESP32-CAM.</strong> Ale jest jeden problem natury podstawowej: firmware kamery
+  IP <em>nie umie spać</em>.</p>
+  <div class="grid2">
+    <article class="mini">
+      <h3>Dlaczego to nie zadziała „jak trzeba”</h3>
+      <ul>
+        <li><strong>Kamera IP 24/7 ciągnie 3–5 W</strong> (podświetlenie nocne +5–10 W).
+        Przy 3,5 W × 24 h = 84 Wh/dobę. To ~42× więcej niż ESP32+PIR w trybie zdarzeniowym.</li>
+        <li>Firmware (Tapo/Xiaomi) nie ma trybu „PIR → obudź → nagraj → śpij".
+        Detekcja ruchu to softwarowa analiza strumienia — <strong>kamera musi cały czas
+        kodować i analizować wideo</strong>.</li>
+        <li>Można wyjąć moduł i podłączyć PIR do GPIO — ale bez firmware, które go
+        obsłuży, PIR nie wyłączy SoC. Chipy jak Ingenic T31 mają tryb deep sleep,
+        ale <strong>fabryczne oprogramowanie go nie używa</strong> (OpenIPC daje wsparcie,
+        ale wymaga flashowania i rozbudowy — to już projekt „moduł kamerowy + własny
+        firmware”, nie rozbiórka gotowca).</li>
+        <li>Ograniczenie „pracy”: rozbierając kamerę tracisz gwarancję, szczelność
+        obudowy i legalność oprogramowania (licencje). Markowy sensor 1/2.7″ z obudowy
+        to ~40–70% wartości urządzenia.</li>
+      </ul>
+    </article>
+    <article class="mini">
+      <h3>Kiedy rozbiórka ma sens</h3>
+      <ul>
+        <li><strong>Moduł kamerowy z martwej kamery</strong> (np. po zalaniu/awarii —
+        baza, obudowa do wyrzucenia, sensor żyje): podpinasz go do ESP32/Pi,
+        piszesz własne oprogramowanie. Wtedy dostajesz sensor 2K za grosze.</li>
+        <li><strong>Wariant „rekin”:</strong> kupić sam moduł kamerowy (moduły z sensorami
+        IMX/OV na płytkach bez SoC) — od ~60–120 zł z AliExpress, podpięcie do ESP32-S3
+        przez MIPI CSI. To droga do dobrej jakości bez kupowania całej kamery.</li>
+        <li>Następny krok jakościowy: <strong>gotowa kamera bateryjna z PIR</strong> +
+        panel solarny (Imou Ranger 2 / Cell PT: tryb zdarzeniowy zużywa 0,34 Wh/60 zdarzeń,
+        solar 3–7 W daje ~3,6–8,4 Wh/dzień — „unlimited battery life” producenta).
+        Cena 250–400 zł za kamerę, ~100–150 zł za panel. To od razu działający produkt,
+        z aplikacją i chmurą — ale bez Twojego głośnika, bez Twojej aplikacji i bez
+        Twojego firmware (ekosystem zamknięty).</li>
+      </ul>
+    </article>
+  </div>
+  <div class="tip">
+    <strong>Werdykt:</strong> rozbiórka gotowca ~230 zł <em>nie zwiększa wartości</em> —
+    moduł IP i tak jest zaprojektowany do ciągłej pracy i nie ma oszczędności na energii.
+    Dużo bardziej opłacalne jest <strong>poskładanie własnego „modułu kamerowego” z sensora
+    IMX + ESP32-S3</strong> (dobre światło, deep sleep, własny firmware) albo użycie
+    gotowej kamery bateryjnej jako rezerwowej/porównawczej w drugim punkcie pola.
   </div>
 </section>
 
@@ -343,6 +398,8 @@
     <li>GardePro — panele 10–15 W w fotopułapkach solarnych 4G jako punkt odniesienia rynku.</li>
     <li>Ceneo / Kamami / Allegro — ceny części (PIR od ~5 zł, moduły ESP32-CAM, DHT22).</li>
     <li>Szpiegujemy / Nocny Łowca — ceny fotopułapek 4G z panelem (680–1000 zł) jako benchmark cenowy.</li>
+    <li>Imou (Cell PT, Cell PT 4G, Ranger 2) — oficjalne liczby energetyczne kamer bateryjnych: 0,34 Wh/60 zdarzeń dziennie, solar 3–7 W → 3,6–8,4 Wh/dzień; Ranger 2 < 3,5 W.</li>
+    <li>TP-Link Tapo / Xiaomi / EZVIZ — ceny kamer IP i zestawów solarnych (Tapo C200/C225 ~150–250 zł, EZVIZ H3c 2K ~189 zł, Xiaomi BW400 Pro zestaw ~599 zł) jako benchmark „co kupuje się za 230 zł”.</li>
   </ul>
   <p class="note">Liczby energetyczne to estymaty inżynierskie do szacunku budżetu — przed
   produkcją zmierz realny prąd spoczynkowy własnej płyty i sprawdź zimowe nasłonecznienie

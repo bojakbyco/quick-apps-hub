@@ -86,9 +86,9 @@
     var lipo = $("iptype").value === "1";
 
     var whDay = w * h;                       // Wh/dobę
-    var dod = lipo ? 0.8 : 0.5;              // LiFePO4 80%, kwasowy 50%
+    var dod = lipo ? 0.5 : 0.8;              // LiFePO4 do 80% DoD, kwasowy 50%
     var ah = whDay * days / v / dod;         // pojemność
-    var panel = whDay / 0.25;                // najgorszy miesiąc (zima) ~25% sprawności
+    var panel = whDay / 0.12;                // grudzień PL: panel daje ~12% mocy znamionowej w ciągu dnia
 
     $("ip-wh").textContent = fmt(whDay, 0) + " Wh/dobę";
     $("ip-ah").textContent = "~" + fmt(ah, 1) + " Ah @" + fmt(v, 1) + " V" + (days > 1 ? " (" + days + " dni autonomii)" : "");
