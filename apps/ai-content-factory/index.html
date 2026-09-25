@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Content Factory — produkt dla małych agencji marketingowych</title>
+<meta name="description" content="Analiza produktu: SaaS wrapper na treg + generatory obrazu/wideo (Seedance 2.5, Nano Banana, HyperFrames) dla małych agencji social media. Rynek, konkurencja, jednostkowa ekonomia, 10 scenariuszy użycia, roadmapa i model przychodów.">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<a class="skip" href="#main">Przejdź do treści</a>
+
+<header class="hero">
+  <p class="kicker">Analiza produktu · AI content marketing · wrzesień 2026</p>
+  <h1>AI Content Factory<br><span class="muted">produkt dla małych agencji marketingowych</span></h1>
+  <p class="lead">Pomysł: komercyjny front + pipeline'y na wrapperze open-source'owego rejestru narzędzi
+  <strong>treg</strong> („OpenRouter dla agentów"), łączące generatory obrazu i wideo — Seedance 2.5,
+  Nano Banana / Gemini 3 Pro Image, HyperFrames — w gotowe scenariusze użycia, które agencje social media
+  mogą sprzedawać klientom. Poniżej: stan rynku, analiza prawna licencji, konkurencja z realnymi cenami,
+  jednostkowa ekonomia, 10 pipeline'ów i plan wejścia na rynek.</p>
+  <nav class="toc" aria-label="Spis treści">
+    <a href="#tl-dr">TL;DR</a>
+    <a href="#rynek">Rynek i problem</a>
+    <a href="#fundament">Fundament techniczny</a>
+    <a href="#konkurencja">Konkurencja</a>
+    <a href="#ekonomia">Ekonomia jednostkowa</a>
+    <a href="#scenariusze">10 pipeline'ów</a>
+    <a href="#architektura">Architektura</a>
+    <a href="#licencja">Licencja treg</a>
+    <a href="#ryzyka">Ryzyka</a>
+    <a href="#roadmapa">Roadmapa MVP</a>
+    <a href="#zrodla">Źródła</a>
+  </nav>
+</header>
+
+<main id="main">
+
+<section id="tl-dr" class="card">
+  <h2>TL;DR — co warto zbudować i dlaczego</h2>
+  <ul class="tight">
+    <li><strong>Rynek jest gotowy:</strong> klienci agencji płacą 300–1500 USD/mies. za „AI agentów", które realnie odciążają pracę. Mała agencja social media to dziś 12–40 h/osobomiesiąc na cięcie klipów, captions i briefy — to jest do zautomatyzowania.</li>
+    <li><strong>treg to legalny fundament:</strong> licencja wprost pozwala używać hosted API (treg.to) w produkcie z pass-through billingiem przez <code>X-Treg-Meta</code> — bez zgody. Niedozwolone jest tylko odsprzedawanie kodu jako konkurencyjnego hostowanego rejestru. Wniosek: <em>nie forkować treg jako backendu — wołać treg.to.</em></li>
+    <li><strong>Z danych treg:</strong> gotowy, udokumentowany pipeline UGC kosztuje ≈0,67 USD za gotowy klip (4 hooki = 2,67 USD). Ludzki twórca: 20–50 USD + tydzień czekania. Konkurencja (Arcads 110 USD/mies. za ~10 wideo, Creatify 19–49 USD/mies.) pokazuje, że klienci już płacą za tę kategorię — ale dostają zamknięte silosy bez własnych kluczy i bez margin control.</li>
+    <li><strong>Nisza dla nas:</strong> Canva-style <em>multi-tenant dashboard dla agencji</em> — na kluczach <em>klienta</em> (BYOK), z pipeline'ami per scenariusz, white-label i rozliczeniem per klient. Do tego współczynnik marży kontroluje sama agencja.</li>
+    <li><strong>Najlepszy pierwszy pipeline (MVP):</strong> „UGC z jednego linku produktu" — wideo 9:16 z twarzą mówiącą + demo + captions, w 15 minut zamiast tygodnia.</li>
+    <li><strong>Model przychodu na start:</strong> 99–249 USD/mies. za agencję + usage-based, plus 30–70% marży odsprzedaży. Break-even: 2–3 klientów.</li>
+  </ul>
+</section>
+
+<section id="rynek" class="card">
+  <h2>Rynek i problem</h2>
+  <p><strong>Kto kupuje:</strong> małe agencje marketingowe (2–15 osób) obsługujące lokalne SMB — restauracje, sklepy, usługi, e-commerce. Ich codzienność to 20–60 postów/reelsów/adsów miesięcznie na klienta, ręcznie briefowanych, filmowanych i ciętych.</p>
+  <p><strong>Ból:</strong> wideo UGC i reelsy to najdroższy, najwolniejszy element produkcji. Ludzki twórca: 20–50 USD/klip + brief + iteracje + tydzień. Agencja nie ma działu wideo; SMB nie ma budżetu na produkcję 2000+ USD/mies.</p>
+  <p><strong>Co już płaci:</strong> agencje sprzedają klientom „pakiety AI" po 300–1500 USD/mies. (chatboty, automatyzacje, content), a platformy white-label (GoHighLevel 97–497 USD/mies., Vendasta od 99 USD, Stammer od 197 USD) pokazują gotowość do płacenia za narzędzia do odsprzedaży. Konkurencja wideo (Arcads, Creatify, HeyGen, Predis, Ocoya) dowodzi popytu na AI content — ale to zamknięte produkty bez kontroli kosztów i bez white-labelu.</p>
+  <p><strong>Trendy technologiczne 2026, które to umożliwiają:</strong></p>
+  <ul>
+    <li><strong>Seedance 2.5</strong> (ByteDance): wideo 4K/30 s z dźwiękiem, talking-head z referencji obrazu + audio, lip-sync, „less-restricted" wariant przyjmuje realistyczne twarze. Przez treg: 0,27 USD/s (720p), czyli ~4,86 USD za 18 s — 10× taniej niż człowiek.</li>
+    <li><strong>Nano Banana (Gemini 2.5 Flash Image) / Nano Banana Pro (Gemini 3 Pro Image)</strong>: pierwsze modele Google z poprawnym renderingiem tekstu w obrazie — grafik social, adsy, brandowane wizualki; prompt pinujący (JSON) daje realistyczne twarze. Przez treg: 0,03 USD/obraz.</li>
+    <li><strong>HyperFrames (HeyGen, Apache 2.0)</strong>: wideo renderowane z HTML/CSS/JS — deterministyczne klipy produktowe, changelogi, animacje typografii bez generatywnego szumu. Render „per minuta" w API HeyGen.</li>
+    <li><strong>Portrait-clone</strong>: JSON-prompt lockujący tożsamość postaci — klucz do spójnych „twarzy" marki w całych kampaniach.</li>
+  </ul>
+  <p><strong>Dlaczego teraz:</strong> koszt gen. wideo spadł w 2026 o rząd wielkości, agencje już sprzedają AI-services, a nikt nie złożył tego w <em>narzędzie agencyjne</em> z white-label + BYOK + pipeline'ami — konkurencja sprzedaje generyczne generatory treści.</p>
+</section>
+
+<section id="fundament" class="card">
+  <h2>Fundament techniczny — co to jest treg i co daje</h2>
+  <p><strong>treg</strong> (superdesigndev/treg, ~3,4k gwiazdek) to „OpenRouter dla narzędzi agentów": jeden token, 3600+ endpointów od 97 dostawców — scrapery social (TikTok, IG, YT, X), wyszukiwanie trendów, generatory obrazu (Gemini 3 Pro Image, GPT Image 2.5, Seedream 4.5/5), wideo (Seedance 2.5), klonowanie głosu (Fish Audio), ad library, enrichment, publikacja (Postiz). Płatność per-call od centa, bez subskrypcji per vendor; klucze własne drużyny zawsze wygrywają i nie są mierzone.</p>
+  <p>Kluczowa właściwość dla SaaS: <strong>pass-through billing</strong>. Twoi użytkownicy płacą za dokładnie to, czego użyją, po cenach hurtowych treg, a Ty możesz doliczać marżę. Zero ryzyka niewykorzystanych subskrypcji, zero kapitału na klucze.</p>
+  <p><strong>Gotowe skille do zaadaptowania jako pipeline'y:</strong></p>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Skill treg</th><th>Co robi</th><th>Koszt jednostkowy (dane treg)</th></tr></thead>
+    <tbody>
+      <tr><td>make-ugc</td><td>Pełna pętla UGC: trendy → postać → hooki → Seedance talking-head → demo (Fish clone) → captions → bill</td><td>4 gotowe klipy ≈ 2,67 USD (≈0,67 USD/klip)</td></tr>
+      <tr><td>ugc-talking-head-video</td><td>Postać + script → klip 9:16 Seedance 2.5 (reAPI/PiAPI), captions ffmpeg+PIL</td><td>0,27–0,385 USD/s (18 s ≈ 4,86–6,93 USD)</td></tr>
+      <tr><td>portrait-clone</td><td>Lock tożsamości postaci w JSON-prompt; 5 modeli do porównania</td><td>~0,03 USD/obraz</td></tr>
+      <tr><td>treg-page / ads-conversion-tracking, google-ads …</td><td>SEO, performance, pomiar — szersze scenariusze agencyjne</td><td>od centa/call</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p><strong>Reszta stosu:</strong> Seedance 2.5 (talking-head), Nano Banana Pro (grafiki z tekstem), HyperFrames (deterministyczne klipy HTML→MP4), Fish Audio (klon głosu, ~0,12 USD/min TTS), TikHub/ScrapeCreators (trendy/transkrypty), Meta Ad Library (competitor creatives), Postiz (publikacja).</p>
+</section>
+
+<section id="konkurencja" class="card">
+  <h2>Konkurencja — kto już na tym zarabia</h2>
+  <div class="tablewrap">
+  <table class="cmp">
+    <thead><tr><th>Produkt</th><th>Typ</th><th>Ceny (2026)</th><th>Słabość / luka</th></tr></thead>
+    <tbody>
+      <tr><td>Arcads</td><td>AI UGC ads z aktorami</td><td>od ~110 USD/mies. (~10 wideo); Creator ~220 USD</td><td>Brak free tier, wysoka cena/wideo, zamknięta biblioteka aktorów, brak BYOK/white-label</td></tr>
+      <tr><td>Creatify</td><td>URL→ads end-to-end</td><td>free ok. 10 kredytów; od 19 USD/mies.</td><td>Kredyty wygasają, jakość zależna od planu; brak kontroli kosztów</td></tr>
+      <tr><td>HeyGen</td><td>Avatary, tłumaczenia, API</td><td>Creator 29 USD/mies.; API per-sekunda (0,0167–0,067 USD/s)</td><td>Nie jest narzędziem agencyjnym multi-client; brak pipeline'ów treści social; białe etykiety tylko w drogich planach</td></tr>
+      <tr><td>Predis.ai</td><td>Generowanie postów + grafiki</td><td>19–212 USD/mies. (kredyty)</td><td>Generyczne posty, brak prawdziwego UGC wideo; drogi przy skali</td></tr>
+      <tr><td>Ocoya</td><td>Copywriting + scheduling</td><td>15–159 USD/mies.</td><td>Głównie tekst; brak wideo UGC</td></tr>
+      <tr><td>Vista Social / Sprout / Metricool</td><td>Social media management</td><td>64–299 USD/mies.</td><td>Zarządzanie, nie generowanie; AI tylko wspiera</td></tr>
+      <tr><td>Stammer / GoHighLevel / Vendasta (white-label)</td><td>Platformy agencyjne</td><td>197–497 USD/mies.</td><td>Chatboty/CRM — content wideo to nie ich rdzeń; GHL „dense", Vendasta drogi white-label</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p><strong>Czego brakuje na rynku</strong> (nasza luka): narzędzia, które łączy (a) white-label dla agencji, (b) prawdziwe generatywne wideo UGC na kosztowalnych kluczach klienta, (c) pipeline'y per scenariusz zamiast pustego canvasu, (d) przezroczysty billing unitowy z marżą pod kontrolą agencji. Konkurencja daje jedno z tych czterech; żaden nie daje wszystkich.</p>
+</section>
+
+<section id="ekonomia" class="card">
+  <h2>Ekonomia jednostkowa — na czym zarabiamy</h2>
+  <p>Koszty gen. treści (stan wrzesień 2026, ceny API/hurtowe; własne klucze klienta obniżają do zera):</p>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Zasób</th><th>Koszt jednostkowy</th></tr></thead>
+    <tbody>
+      <tr><td>Obraz (Gemini 3 Pro Image / GPT Image 2.5)</td><td>0,017–0,03 USD</td></tr>
+      <tr><td>Wideo Seedance 2.5 720p</td><td>0,27 USD/s (reAPI); 0,35–0,385 USD/s (PiAPI); ~4,86 USD za 18-s talking-head</td></tr>
+      <tr><td>TTS / klon głosu Fish Audio</td><td>~0,12 USD/min (TTS S2.1 Pro)</td></tr>
+      <tr><td>Trendy + transkrypty (TikTok/IG)</td><td>0,02–0,04 USD za run</td></tr>
+      <tr><td>HyperFrames render (HeyGen API)</td><td>per minuta wg cennika API</td></tr>
+      <tr><td>Pełny klip UGC end-to-end (trendy+postać+wideo+captions)</td><td><strong>≈ 0,67–1,50 USD</strong></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p><strong>Jak zarabiać (3 poziomy):</strong></p>
+  <ul>
+    <li><strong>Subskrypcja SaaS:</strong> 99 USD (Starter, 1 agencja/1 brand), 199–249 USD (Agency, multi-brand + white-label). Benchmarki: Creatify 19–49, Arcads 110–220, Ocoya 15–159, Predis 19–212, GHL 97–497 — 99–249 USD za dedykowane narzędzie content-wideo dla agencji jest w środku rynku.</li>
+    <li><strong>Usage-based (marża na generacjach):</strong> agencja płaci realny koszt (przez <code>X-Treg-Meta</code> pass-through) + 30–70% marży narzuconej przez Ciebie lub przez nią. Benchmark: agencje przebijają koszt 2–4× u klienta; white-label AI-retainer 300–1500 USD/klienta/mies.</li>
+    <li><strong>Pakiet startowy / onboarding:</strong> 500–1500 USD setup (charakter marki, biblioteka głosów, szablony).</li>
+  </ul>
+  <p><strong>Przykładowy unit economics agencji (white-label):</strong> klient SMB płaci 500 USD/mies. za „pakiet AI content" (12 klipów UGC + grafiki + kalendarz). Koszt gen.: 12 × 1,20 + 40 × 0,03 + TTS ≈ 20–25 USD. Marża brutto &gt; 95% na warstwie generacji — reszta to czas pracy (nadzór, brand, publikacja). Break-even platformy: 2–3 klientów agencji po 199 USD, albo 1 klient przy white-label retainerze.</p>
+</section>
+
+<section id="scenariusze" class="card">
+  <h2>10 pipeline'ów — scenariusze użycia warte sprzedaży</h2>
+  <p>Każdy pipeline = formularz w UI + sekwencja wywołań treg (lub API vendorów) + walidacja + szablon outputu. Poziom trudności i priorytet:</p>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>#</th><th>Pipeline</th><th>Wejście → Wyjście</th><th>Stos</th><th>Koszt/run</th><th>Priorytet</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td><strong>UGC z linku produktu</strong></td><td>URL produktu → 3–5 wariantów hooków 9:16 z twarzą mówiącą + demo + captions</td><td>TikHub trendy → portrait-clone → Seedance 2.5 → Fish → ffmpeg</td><td>2,70–7,50 USD (3–5 klipów)</td><td>★★★ MVP</td></tr>
+      <tr><td>2</td><td><strong>Hook bank z trendów</strong></td><td>nische/keywords → tabela hooków z metrykami (views, pierwsza linia, wzorzec)</td><td>TikHub/ScrapeCreators/Meta Ad Library + LLM</td><td>0,02–0,10 USD</td><td>★★★ razem z #1</td></tr>
+      <tr><td>3</td><td><strong>Avatar marki (postać + głos)</strong></td><td>zdjęcie/opis → spójna postać multi-model + klon głosu + biblioteka</td><td>portrait-clone + Gemini 3 Pro Image + Fish Audio</td><td>0,10–1 USD + klon</td><td>★★★</td></tr>
+      <tr><td>4</td><td><strong>Grafiki social z tekstem (Nano Banana)</strong></td><td>temat + hasło → 5 wariantów 1:1/4:5/9:16 z poprawnym typo i brandowaniem</td><td>Gemini 3 Pro Image (tekst rend. poprawny)</td><td>0,09–0,15 USD (5 szt.)</td><td>★★★ tani, świetny do sprzedaży</td></tr>
+      <tr><td>5</td><td><strong>Ad variants (performance)</strong></td><td>produkt + kąty → 10 wariantów (hook x format x CTA) do Meta/TikTok Ads</td><td>Nano Banana + Seedance + captions</td><td>5–15 USD</td><td>★★☆ droższy; dla agencji performance</td></tr>
+      <tr><td>6</td><td><strong>Demo/reel produktowy (HyperFrames)</strong></td><td>dane/URL/artykuł → deterministyczny klip HTML→MP4 (changelog, spec, animacje)</td><td>HyperFrames (Apache 2.0) render lokalnie lub API</td><td>per minuta renderu</td><td>★★☆ niski koszt, wysoka przewidywalność</td></tr>
+      <tr><td>7</td><td><strong>Voiceover multi-język</strong></td><td>skrypt → 1–5 języków z klonem głosu marki</td><td>Fish Audio TTS/klon</td><td>0,12 USD/min × języki</td><td>★★☆ ekspansja PL/DE/CZ dla agencji</td></tr>
+      <tr><td>8</td><td><strong>Competitor creative watch</strong></td><td>konkurenci → cotygodniowy raport ich ads/reelsów + wyciągnięte wzorce</td><td>Meta Ad Library + TikHub + LLM</td><td>0,10–0,50 USD/tydz.</td><td>★★☆ retention play</td></tr>
+      <tr><td>9</td><td><strong>Kalendarz contentu + auto-post</strong></td><td>strategia → miesiąc postów (grafiki+copy) z publikacją</td><td>pipeline 4 + Postiz</td><td>2–5 USD/mies.</td><td>★★☆ dopiero po #1–4</td></tr>
+      <tr><td>10</td><td><strong>Local ads (restauracje/sklepy)</strong></td><td>menu/oferta → reelsy 15–30 s „dziś u nas"</td><td>Seedance + Nano Banana + TTS</td><td>1,50–4 USD/klip</td><td>★★☆ konkretna nisza, łatwa sprzedaż lokalna</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p><strong>Kolejność wdrożenia:</strong> MVP = #1+#2+#3+#4 (dwa tygodnie pracy): jeden „produkt" kompletny od trendu do gotowego klipu i grafiki, sprzedawalny jako „AI content w 15 minut". Potem #5 dla agencji performance, #6 jako tani dodatek, reszta według sygnałów od klientów.</p>
+</section>
+
+<section id="architektura" class="card">
+  <h2>Architektura produktu</h2>
+  <pre class="code">┌─ Frontend (dashboard agencji, white-label) ─────────────────────┐
+│  Next.js/React · multi-tenant · klienci agencji = sub-accounts  │
+│  UI pipeline'ów, biblioteka postaci/głosów, koszyk generacji,   │
+│  podgląd, export, raporty kosztów, publikacja                  │
+└──────────────┬──────────────────────────────────────────────────┘
+               │ REST / WebSocket (jobs)
+┌──────────────▼──────────────────────────────────────────────────┐
+│ Backend (Node/Python) · kolejka zadań (BullMQ/Celery)          │
+│  orkiestrator pipeline'ów (skille treg = szablony kroków),      │
+│  walidacja (Whisper, ffprobe), captions, watermark, storage     │
+└──────────────┬──────────────────────────────────────────────────┘
+               │ treg call (jeden token) · X-Treg-Meta (billing pass-through)
+┌──────────────▼──────────────────────────────────────────────────┐
+│ treg.to — 3600+ endpointów: Seedance 2.5, Gemini 3 Pro Image,  │
+│ GPT Image 2.5, Fish Audio, TikHub, ScrapeCreators, Ad Library, │
+│ Postiz · BYOK użytkownika zawsze wygrywa (0 kosztu dla Ciebie) │
+└─────────────────────────────────────────────────────────────────┘</pre>
+  <p><strong>Warianty monetyzacji architektury:</strong></p>
+  <ul class="tight">
+    <li><strong>A. Pass-through (polecany):</strong> klucz treg platformy lub klucze własne klientów; UI pokazuje „ile to kosztuje" przed generacją; Ty bierzesz marżę % lub stałą opłatę. Zero ryzyka cenowego.</li>
+    <li><strong>B. Abonament z kredytami:</strong> prościej dla klienta, ale znasz dokładne koszty tylko jeśli trzymasz ceny hurtowe — ryzyko marży przy zmianach cen vendorów (brakowało tego Creatify'emu).</li>
+    <li><strong>C. Hybryda:</strong> subskrypcja za platformę + usage na generacje (jak HeyGen API + plan).</li>
+  </ul>
+  <p><strong>White-label:</strong> własna domena, logo, kolory, szablony raportów; sub-accounty per klient agencji z izolacją i limitami; raporty „dla klienta" bez logo produktu — to jest dokładnie to, za co agencje płacą GHL-owi 497 USD/mies.</p>
+</section>
+
+<section id="licencja" class="card">
+  <h2>Licencja treg — co wolno, czego nie wolno</h2>
+  <p>Apache 2.0 + Additional Terms (zweryfikowane w LICENSE na main, wrzesień 2026):</p>
+  <ul>
+    <li><strong>Wolno:</strong> użycie hosted treg.to API w produkcie komercyjnym z pass-through billingiem przez <code>X-Treg-Meta</code> i <code>usage/by-tag</code> — wprost dopuszczone: <em>„Using the hosted treg.to API inside your own product — with pass-through billing via X-Treg-Meta and usage/by-tag — is allowed without permission"</em>. To jest dokładnie nasz model A.</li>
+    <li><strong>Wolno:</strong> używać, modyfikować, redystrybuować kod wewnątrz własnej organizacji (self-host dla własnego zespołu zachęcany).</li>
+    <li><strong>Zakazane bez pisemnej zgody (jason@superdesign.dev):</strong> hostowany/managed/embedded serwis dla osób trzecich — np. fork treg jako backend naszego SaaS. Wniosek: <em>nie hostujemy treg; wołamy treg.to.</em></li>
+    <li><strong>Skille treg (make-ugc, ugc-talking-head-video, portrait-clone):</strong> pliki SKILL.md i skrypty w repo — treść procedur można adaptować (to „instrukcje" w repo Apache 2.0), ale jeśli kopiujemy kod 1:1 do produktu, lepiej trzymać się litery licencji i nie odsprzedawać go jako część konkurencyjnego rejestru; pipeline'y piszemy sami na bazie tych scenariuszy.</li>
+  </ul>
+  <p><strong>Note prawne (nie porada):</strong> przed skalowaniem warto napisać do Jasona z superdesign.dev z opisem modelu B/C — jeden e-mail, zero ryzyka.</p>
+</section>
+
+<section id="ryzyka" class="card">
+  <h2>Ryzyka i jak je mitygować</h2>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Ryzyko</th><th>Waga</th><th>Mitygacja</th></tr></thead>
+    <tbody>
+      <tr><td>Zależność od treg (API, ceny, licencja)</td><td>Wysoka</td><td>Warstwa abstrakcji nad treg; BYOK jako default (klient płaci vendorom wprost); własne integracje z reAPI/PiAPI/Fish/HeyGen gdy trzeba; e-mail do superdesign.dev przed modelem B/C</td></tr>
+      <tr><td>Zmienne ceny wideo (Seedance 0,27–0,385 USD/s)</td><td>Średnia</td><td>Pokazuj koszt przed generacją; marża % nie stała; limity budżetu per run/klient</td></tr>
+      <tr><td>Jakość/rejestry twarzy (deepfake, likeness)</td><td>Średnia</td><td>Tylko postaci wygenerowane (portrait-clone), nie prawdziwe osoby; zgoda na głos; branding „AI-generated"; regulamin</td></tr>
+      <tr><td>Moderacja treści (Seedance content filter)</td><td>Średnia</td><td>Less-restricted route przez treg (rejestracja assetu postaci); fallback do standardowych; refundacja przy failu (treg zwraca)</td></tr>
+      <tr><td>Konkurencja big-tech (Google/ByteDance/OpenAI mogą zrobić to samo)</td><td>Średnia</td><td>Sprzedajemy pipeline'y agencyjne + white-label + multi-tenant, nie model; szybkość niszy</td></tr>
+      <tr><td>Ocena jakości generacji (ręczna)</td><td>Wysoka praca</td><td>Walidacja automatyczna (Whisper, ffprobe, checks ze skilli: lip-sync, hands, prop drift), ale ostateczny wybór wariantów — zawsze człowiek (Stops w make-ugc)</td></tr>
+      <tr><td>Churn klientów agencji</td><td>Średnia</td><td>Retention plays: raport competitor watch (#8), biblioteka assetów marki (#3) — im więcej zgromadzone, tym trudniej odejść</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section id="roadmapa" class="card">
+  <h2>Roadmapa — od zera do pierwszych klientów</h2>
+  <ol class="tight">
+    <li><strong>Tydzień 1–2 · Walidacja bez kodu:</strong> 10 rozmów z małymi agencjami (PL+EN); pokaż im kosztorys „0,67 USD/klip vs 20–50 USD człowiek"; sprzedaj 2–3 pilotów za pakiet setupowy. Cel: potwierdzić, że płacą za pipeline'y, nie za „kolejny generator".</li>
+    <li><strong>Tydzień 3–5 · MVP (pipeline #1+#2+#3+#4):</strong> backend kolejki + integracja treg (Seedance, Gemini Image, Fish, TikHub) + prosty dashboard (formularz → job → podgląd). Wzorzec z make-ugc, ale z UI zamiast CLI. Własne klucze klientów od startu.</li>
+    <li><strong>Tydzień 6–8 · White-label + rozliczenia:</strong> sub-accounty, limity, raporty kosztów, publikacja (Postiz). Ceny: 99/199/249 USD + usage.</li>
+    <li><strong>Miesiąc 3+ · Rozszerzenia:</strong> #5 ad variants (performance), #6 HyperFrames, #7 multi-language, #8 competitor watch, #9 kalendarz, #10 local ads. API publiczne dla większych agencji.</li>
+    <li><strong>Skalowanie:</strong> model partnerski z agencjami (white-label za 249 USD/mies. z limitem brandów), potem self-serve; rozważ pisemne pozwolenie od treg na głębszą integrację, gdy model urośnie.</li>
+  </ol>
+  <p><strong>Metryki sukcesu MVP:</strong> czas od logowania do pierwszego wyeksportowanego klipu &lt; 15 min; koszt pierwszego „pakietu" &lt; 10 USD; % klipów zaakceptowanych bez poprawek (cel 60–70% przy 3–5 wariantach); churn &lt; 5% mies. po wdrożeniu white-label.</p>
+</section>
+
+<section id="zrodla" class="card">
+  <h2>Źródła</h2>
+  <ul class="tight src">
+    <li>treg — repo i licencja: github.com/superdesigndev/treg (Apache 2.0 + Additional Terms, zweryfikowane 25.09.2026)</li>
+    <li>Skill make-ugc (pełna pętla UGC): treg.to/skills/ugc/SKILL.md</li>
+    <li>Skill ugc-talking-head-video (prompt, duration table, koszty Seedance): github.com/superdesigndev/treg/blob/main/.agents/skills/ugc-talking-head-video/SKILL.md</li>
+    <li>Poradnik „AI UGC Videos for $0.67 a Clip": treg.to/ugc</li>
+    <li>Video „How to run your first AI UGC campaign" (Henry, treg): youtube.com/watch?v=GkGufbIVVC8 — transkrypt zablokowany bot-gate na serwerze; treść = workflow z treg.to/ugc (opisany powyżej w całości)</li>
+    <li>Seedance 2.5: seed.bytedance.com (4K/30 s, 50 inputów, referencing audio+obraz)</li>
+    <li>Nano Banana Pro / Gemini 3 Pro Image: blog.google („Introducing Nano Banana Pro"); tekst w obrazie — digitalapplied.com marketing guide</li>
+    <li>HyperFrames: github.com/heygen-com/hyperframes (Apache 2.0, HTML→video); API HeyGen per minuta</li>
+    <li>Pricing HeyGen API: help.heygen.com „HeyGen API Pricing Explained" (0,0167–0,0667 USD/s avatary; Cinematic 7,32–17,70 USD)</li>
+    <li>Arcads vs Creatify 2026: ngram.com/blog/arcads-vs-creatify; sparkiz.ai; reddit r/indiehackers</li>
+    <li>Predis.ai / Ocoya / Vista Social / Metricool / Sprout: predis.ai, ocoya.com, sintra.ai/blog/best-social-media-ai-agents; Predis vs Ocoya porównanie</li>
+    <li>White-label AI dla agencji (ceny 300–1500 USD/klient, GHL/Vendasta/Stammer): pickaxe.co/post/white-label-ai-tools-for-agencies; wireflow.ai; revops.ai</li>
+    <li>treg.to — katalog 3600+ endpointów, pass-through billing X-Treg-Meta, ceny Seedance/Gemini/Fish (zapis 25.09.2026)</li>
+  </ul>
+  <p class="note">Ceny API i subskrypcji: stan na wrzesień 2026, zweryfikowane w źródłach w dniu analizy; mogą się zmieniać. Analiza produktowa, nie porada prawna.</p>
+</section>
+
+</main>
+
+<footer>
+  <p>AI Content Factory — analiza produktu · szybka aplikacja na Quick Apps Hub · <a href="../../">← wróć do huba</a></p>
+</footer>
+
+<script src="./app.js"></script>
+</body>
+</html>
