@@ -35,7 +35,7 @@ a:hover{text-decoration:underline}
 }
 .hero h1{
   font-size:clamp(1.9rem,6vw,3.1rem);line-height:1.04;margin:0 0 16px;
-  letter-spacing:-.02em;
+  letter-spacing:-.02em;overflow-wrap:anywhere;
 }
 .hero h1 .muted{color:var(--muted)}
 .hero .lead{color:var(--muted);font-size:clamp(1rem,2.4vw,1.15rem);max-width:62ch}
@@ -67,7 +67,7 @@ ul.tight li{margin:0 0 10px;color:var(--text)}
 ol.tight{padding-left:1.4em;margin:0}
 ol.tight li{margin:0 0 12px}
 
-.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--border);border-radius:12px;margin:14px 0}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--border);border-radius:12px;margin:14px 0;max-width:100%}
 table{border-collapse:collapse;width:100%;min-width:560px;font-size:.92rem}
 th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top}
 thead th{background:var(--card2);color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:.04em;position:sticky;top:0}
