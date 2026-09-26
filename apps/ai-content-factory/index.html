@@ -17,7 +17,7 @@
   <strong>treg</strong> („OpenRouter dla agentów"), łączące generatory obrazu i wideo — Seedance 2.5,
   Nano Banana / Gemini 3 Pro Image, HyperFrames — w gotowe scenariusze użycia, które agencje social media
   mogą sprzedawać klientom. Poniżej: stan rynku, analiza prawna licencji, konkurencja z realnymi cenami,
-  jednostkowa ekonomia, 10 pipeline'ów i plan wejścia na rynek.</p>
+  jednostkowa ekonomia, model rozliczeń kredytami, 10 pipeline'ów i plan wejścia na rynek.</p>
   <nav class="toc" aria-label="Spis treści">
     <a href="#tl-dr">TL;DR</a>
     <a href="#rynek">Rynek i problem</a>
@@ -29,6 +29,7 @@
     <a href="#licencja">Licencja treg</a>
     <a href="#ryzyka">Ryzyka</a>
     <a href="#roadmapa">Roadmapa MVP</a>
+    <a href="#oczekiwania">Rozmowa z agencją</a>
     <a href="#zrodla">Źródła</a>
   </nav>
 </header>
@@ -42,8 +43,9 @@
     <li><strong>treg to legalny fundament:</strong> licencja wprost pozwala używać hosted API (treg.to) w produkcie z pass-through billingiem przez <code>X-Treg-Meta</code> — bez zgody. Niedozwolone jest tylko odsprzedawanie kodu jako konkurencyjnego hostowanego rejestru. Wniosek: <em>nie forkować treg jako backendu — wołać treg.to.</em></li>
     <li><strong>Z danych treg:</strong> gotowy, udokumentowany pipeline UGC kosztuje ≈0,67 USD za gotowy klip (4 hooki = 2,67 USD). Ludzki twórca: 20–50 USD + tydzień czekania. Konkurencja (Arcads 110 USD/mies. za ~10 wideo, Creatify 19–49 USD/mies.) pokazuje, że klienci już płacą za tę kategorię — ale dostają zamknięte silosy bez własnych kluczy i bez margin control.</li>
     <li><strong>Nisza dla nas:</strong> Canva-style <em>multi-tenant dashboard dla agencji</em> — na kluczach <em>klienta</em> (BYOK), z pipeline'ami per scenariusz, white-label i rozliczeniem per klient. Do tego współczynnik marży kontroluje sama agencja.</li>
-    <li><strong>Najlepszy pierwszy pipeline (MVP):</strong> „UGC z jednego linku produktu" — wideo 9:16 z twarzą mówiącą + demo + captions, w 15 minut zamiast tygodnia.</li>
-    <li><strong>Model przychodu na start:</strong> 99–249 USD/mies. za agencję + usage-based, plus 30–70% marży odsprzedaży. Break-even: 2–3 klientów.</li>
+    <li><strong>Najlepszy pierwszy pipeline (MVP):</strong> „UGC z jednego linku produktu" — wideo 9:16 z twarzą mówiącą + demo + captions, w 15 minut zamiast tygodnia. Reszta scenariuszy dopiero po sygnale z pilota.</li>
+    <li><strong>Model rozliczeń:</strong> <em>kredyty pre-paid</em> — agencja kupuje wirtualną walutę, każda generacja ma stałą cenę w kredytach widoczną przed kliknięciem. Zamiast faktur per API-call: jedno saldo i pełna przewidywalność kosztu. Szczegóły w sekcji Architektura.</li>
+    <li><strong>Model przychodu na start:</strong> 99–249 USD/mies. za agencję + pakiety kredytów na generacje, plus 30–70% marży odsprzedaży. Break-even: 2–3 klientów.</li>
   </ul>
 </section>
 
@@ -119,7 +121,7 @@
   <p><strong>Jak zarabiać (3 poziomy):</strong></p>
   <ul>
     <li><strong>Subskrypcja SaaS:</strong> 99 USD (Starter, 1 agencja/1 brand), 199–249 USD (Agency, multi-brand + white-label). Benchmarki: Creatify 19–49, Arcads 110–220, Ocoya 15–159, Predis 19–212, GHL 97–497 — 99–249 USD za dedykowane narzędzie content-wideo dla agencji jest w środku rynku.</li>
-    <li><strong>Usage-based (marża na generacjach):</strong> agencja płaci realny koszt (przez <code>X-Treg-Meta</code> pass-through) + 30–70% marży narzuconej przez Ciebie lub przez nią. Benchmark: agencje przebijają koszt 2–4× u klienta; white-label AI-retainer 300–1500 USD/klienta/mies.</li>
+    <li><strong>Pakiety kredytów (marża na generacjach):</strong> agencja kupuje kredyty pre-paid, generacje schodzą z salda po stałym cenniku z marżą 30–70%. Kurs kredytu kwartalnie rewizjonowany pod ceny hurtowe treg. Benchmark: agencje przebijają koszt 2–4× u klienta; white-label AI-retainer 300–1500 USD/klienta/mies.</li>
     <li><strong>Pakiet startowy / onboarding:</strong> 500–1500 USD setup (charakter marki, biblioteka głosów, szablony).</li>
   </ul>
   <p><strong>Przykładowy unit economics agencji (white-label):</strong> klient SMB płaci 500 USD/mies. za „pakiet AI content" (12 klipów UGC + grafiki + kalendarz). Koszt gen.: 12 × 1,20 + 40 × 0,03 + TTS ≈ 20–25 USD. Marża brutto &gt; 95% na warstwie generacji — reszta to czas pracy (nadzór, brand, publikacja). Break-even platformy: 2–3 klientów agencji po 199 USD, albo 1 klient przy white-label retainerze.</p>
@@ -169,10 +171,11 @@
 └─────────────────────────────────────────────────────────────────┘</pre>
   <p><strong>Warianty monetyzacji architektury:</strong></p>
   <ul class="tight">
-    <li><strong>A. Pass-through (polecany):</strong> klucz treg platformy lub klucze własne klientów; UI pokazuje „ile to kosztuje" przed generacją; Ty bierzesz marżę % lub stałą opłatę. Zero ryzyka cenowego.</li>
-    <li><strong>B. Abonament z kredytami:</strong> prościej dla klienta, ale znasz dokładne koszty tylko jeśli trzymasz ceny hurtowe — ryzyko marży przy zmianach cen vendorów (brakowało tego Creatify'emu).</li>
-    <li><strong>C. Hybryda:</strong> subskrypcja za platformę + usage na generacje (jak HeyGen API + plan).</li>
+    <li><strong>A. Kredyty pre-paid (rekomendowany):</strong> agencja kupuje wirtualną walutę; każda generacja ma stałą cenę w kredytach widoczną <em>przed</em> kliknięciem (klip UGC, pakiet grafik, voiceover, raport trendów). Zalety: gotówka z góry, jedno saldo zamiast faktur per API-call, pełna przewidywalność — najłatwiej to sprzedać właścicielowi agencji. Zasady, które trzeba ustawić od startu: kredyty nie wygasają z końcem cyklu (rollover 12 mies. — wprost przewaga nad Creatify/Predis), nieudana generacja (filtr, timeout) zwraca kredyty automatycznie, w kursie kredytu siedzi bufor 15–20% na zmiany cen vendorów + kwartalna rewizja kursu (przecena pakietów, nigdy devalwacja kupionych kredytów).</li>
+    <li><strong>B. Pass-through / BYOK:</strong> klucze własne klientów, agencja płaci hurtowo per generacja (<code>X-Treg-Meta</code>); zero ryzyka cenowego dla platformy, ale zmienne faktury i niska prostota — zostaje opcją dla największych agencji.</li>
+    <li><strong>C. Hybryda (docelowo):</strong> stała opłata platformowa za dostęp i white-label + kredyty na generacje; przy BYOK liczymy tylko pomiar zużycia.</li>
   </ul>
+  <p><strong>Sub-konta i limity:</strong> agencja rozdziela kredyty per swój klient (limit miesięczny, alert przy nietypowym zużyciu) — raport zużycia per klient wchodzi w raport dla jego klientów. Księgowość pre-paidu: przychód rozpoznawany przy zużyciu kredytów, nie przy wpłacie.</p>
   <p><strong>White-label:</strong> własna domena, logo, kolory, szablony raportów; sub-accounty per klient agencji z izolacją i limitami; raporty „dla klienta" bez logo produktu — to jest dokładnie to, za co agencje płacą GHL-owi 497 USD/mies.</p>
 </section>
 
@@ -209,13 +212,29 @@
 <section id="roadmapa" class="card">
   <h2>Roadmapa — od zera do pierwszych klientów</h2>
   <ol class="tight">
-    <li><strong>Tydzień 1–2 · Walidacja bez kodu:</strong> 10 rozmów z małymi agencjami (PL+EN); pokaż im kosztorys „0,67 USD/klip vs 20–50 USD człowiek"; sprzedaj 2–3 pilotów za pakiet setupowy. Cel: potwierdzić, że płacą za pipeline'y, nie za „kolejny generator".</li>
-    <li><strong>Tydzień 3–5 · MVP (pipeline #1+#2+#3+#4):</strong> backend kolejki + integracja treg (Seedance, Gemini Image, Fish, TikHub) + prosty dashboard (formularz → job → podgląd). Wzorzec z make-ugc, ale z UI zamiast CLI. Własne klucze klientów od startu.</li>
-    <li><strong>Tydzień 6–8 · White-label + rozliczenia:</strong> sub-accounty, limity, raporty kosztów, publikacja (Postiz). Ceny: 99/199/249 USD + usage.</li>
-    <li><strong>Miesiąc 3+ · Rozszerzenia:</strong> #5 ad variants (performance), #6 HyperFrames, #7 multi-language, #8 competitor watch, #9 kalendarz, #10 local ads. API publiczne dla większych agencji.</li>
+    <li><strong>Tydzień 1–2 · Walidacja bez kodu:</strong> 10 rozmów z małymi agencjami (PL+EN); pokaż im kosztorys „0,67 USD/klip vs 20–50 USD człowiek"; sprzedaj 2–3 piloty za pakiet setupowy. Cel: potwierdzić, że płacą za pipeline'y, nie za „kolejny generator". Checklist rozmowy: sekcja poniżej.</li>
+    <li><strong>Tydzień 3–5 · MVP wąskie (pipeline #1 + grafiki):</strong> backend kolejki + integracja treg (Seedance, Gemini Image, Fish, TikHub) + prosty dashboard (formularz → job → podgląd → export) + <strong>portfel kredytów z cennikiem per operacja</strong>. Wzorzec z make-ugc, ale z UI zamiast CLI. Własne klucze klientów od startu. Bez publikacji, white-labelu i integracji — to faza 2.</li>
+    <li><strong>Tydzień 6–8 · White-label + rozliczenia:</strong> sub-accounty, limity, raporty kosztów, publikacja (Postiz). Ceny: 99/199/249 USD + pakiety kredytów.</li>
+    <li><strong>Miesiąc 3+ · Rozszerzenia:</strong> #5 ad variants (performance), #6 HyperFrames, #7 multi-language, #8 competitor watch, #9 kalendarz, #10 local ads — tylko po sygnale z pilota. API publiczne dla większych agencji.</li>
     <li><strong>Skalowanie:</strong> model partnerski z agencjami (white-label za 249 USD/mies. z limitem brandów), potem self-serve; rozważ pisemne pozwolenie od treg na głębszą integrację, gdy model urośnie.</li>
   </ol>
   <p><strong>Metryki sukcesu MVP:</strong> czas od logowania do pierwszego wyeksportowanego klipu &lt; 15 min; koszt pierwszego „pakietu" &lt; 10 USD; % klipów zaakceptowanych bez poprawek (cel 60–70% przy 3–5 wariantach); churn &lt; 5% mies. po wdrożeniu white-label.</p>
+</section>
+
+<section id="oczekiwania" class="card">
+  <h2>Rozmowa z właścicielem agencji — czego oczekuje i co ustalić</h2>
+  <p><strong>Nie zaczynaj od technologii.</strong> Właściciel małej agencji kupuje jedno z trzech: (1) niższy koszt produkcji (twórcy 80–200 zł/klip), (2) czas (tydzień na klip → 15 minut), (3) więcej klientów bez zatrudniania ludzi. Ustal które — i do tego klinuj ofertę.</p>
+  <p><strong>Hipotezy o jego oczekiwaniach (do sprawdzenia, nie pewniki):</strong> obniżenie kosztu wideo przy zachowaniu jakości; przewidywalny koszt miesięczny (dlatego kredyty pre-paid, nie faktury per API); kontrola jakości przed pokazaniem klientowi (podglądy, wybór wariantu przez człowieka); white-label wobec jego klientów; brak lock-in. Jeśli o to pyta — odpowiedzi są w sekcjach Ekonomia i Architektura.</p>
+  <p><strong>Pytania, które musisz zadać (odpowiedzi = zakres MVP):</strong></p>
+  <ul class="tight">
+    <li>Ile klipów wideo/mies. produkuje cała agencja i ile z tego UGC? <em>→ rozmiar pakietu kredytów, które pipeline'y first</em></li>
+    <li>Kto akceptuje treść u klienta — agencja czy klient? <em>→ approval flow i podglądy w MVP</em></li>
+    <li>W czym dziś planują i publikują (Canva, Meta, Planable)? <em>→ integracje vs sam export</em></li>
+    <li>Płacą już za Arcads / Creatify / HeyGen? Co im przeszkadza? <em>→ pozycjonowanie i price anchor</em></li>
+    <li>Kto płaci za przeróbki — wliczone czy extra? <em>→ polityka retry w kredytach</em></li>
+    <li>Klient SMB płaci z góry czy po fakturze? <em>→ prepaid kredytów musi pasować do ich cash flow</em></li>
+  </ul>
+  <p><strong>Sygnały:</strong> dobre — 5+ klientów SMB na retainerach, sam skarży się na koszt/czas wideo, pyta o white-label i ceny hurtowe, chce pilota u 1 klienta. Złe — „zapłacę, jak zarobię", „nasi klienci nie ufają AI" bez pomysłu na zmianę, &lt; 20 klipów/mies. (narzędzie nie zmieni jego biznesu), oczekuje strategii contentu za darmo w pakiecie.</p>
 </section>
 
 <section id="zrodla" class="card">

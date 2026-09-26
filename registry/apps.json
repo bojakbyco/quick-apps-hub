@@ -140,14 +140,14 @@
   {
    "slug": "ai-content-factory",
    "name": "AI Content Factory — SaaS dla agencji na treg",
-   "description": "Analiza produktu: wrapper na treg + Seedance 2.5 / Nano Banana / HyperFrames jako SaaS dla małych agencji social media. Rynek, konkurencja z cenami, unit economics (0,67 USD/klip UGC), 10 pipeline'ów, licencja treg, roadmapa MVP.",
+   "description": "Analiza produktu: wrapper na treg + Seedance 2.5 / Nano Banana / HyperFrames jako SaaS dla małych agencji social media. Rynek, konkurencja z cenami, unit economics (0,67 USD/klip UGC), model rozliczeń kredytami pre-paid, 10 pipeline'ów, licencja treg, roadmapa MVP i checklist rozmowy z agencją.",
    "category": "Raport badawczy",
    "accent": "#a78bfa",
    "source": "apps/ai-content-factory",
    "template": "blank",
    "featured": false,
    "created": "2026-09-25",
-   "updated": "2026-09-25"
+   "updated": "2026-09-26"
   }
  ]
 }
