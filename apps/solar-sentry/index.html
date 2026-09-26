@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Solar Sentry — solarny strażnik działki: wideo PIR, odstraszanie dźwiękiem, PWA</title>
 <meta name="description" content="Prześwietlenie budżetowego, solarnego strażnika działki: czujnik PIR budzi kamerę ESP32, wysyła klip na serwer i push do użytkownika, a głośnik odstrasza sarny i dziki dźwiękami. Budżet energii, koszty, prawo w Polsce, wymagania PWA.">
-<link rel="stylesheet" href="./style.css?v=1">
-<script defer src="./app.js?v=1"></script>
+<link rel="stylesheet" href="./style.css?v=2">
+<script defer src="./app.js?v=2"></script>
 </head>
 <body>
 <a class="skip" href="#main">Przejdź do treści</a>
@@ -23,10 +23,12 @@
     <a href="#koncept">Koncept</a>
     <a href="#przeplyw">Przepływ zdarzenia</a>
     <a href="#rozbiorka">Kamera z rozbiórki</a>
+    <a href="#pir-wake">Kamera IP budzona PIR</a>
     <a href="#odstraszanie">Dźwięki odstraszania</a>
     <a href="#prawo">Prawo w Polsce</a>
     <a href="#energia">Budżet energii</a>
     <a href="#koszty">Koszty i cena</a>
+    <a href="#oem">Fotopułapki OEM</a>
     <a href="#pwa">Wymagania PWA</a>
     <a href="#zrodla">Źródła</a>
   </nav>
@@ -226,6 +228,86 @@
   </div>
 </section>
 
+<section id="pir-wake" class="card">
+  <h2>2.7 Kamera IP budzona PIR — „śpiąca kamera” z gotowca</h2>
+  <p><strong>Pomysł:</strong> nie rozbierać kamery IP, tylko <em>odciąć jej prąd</em>.
+  PIR budzi mały MCU (ESP32), ten załącza zasilanie kamery przez MOSFET, kamera
+  bootuje się, nagrywa/streamuje i po zdarzeniu zasilanie znika. Kamera IP staje
+  się wtedy „fotopułapką” z sensorem 2K i dobrym IR — bez pisania firmware kamery.</p>
+
+  <div class="grid2">
+    <article class="mini">
+      <h3>Czas — co naprawdę kosztuje zimny start</h3>
+      <ul>
+        <li>Kamera IP retail (Tapo C200/C225, Xiaomi C300): <strong>~25–45 s do pierwszej
+        klatki</strong> — Linux + attach Wi-Fi + start agenta; PTZ-y (C200) dodatkowo
+        kalibrują obrót.</li>
+        <li>Moduł Ingenic T31 + OpenIPC/Thingino: <strong>~10–20 s</strong> (chudy
+        system, mniej usług).</li>
+        <li>Kamera bateryjna (Imou Cell, Reolink Argus): <strong>&lt;1 s</strong> — jest
+        <em>projektowana</em> pod wybudzenie z PIR.</li>
+        <li>Okno zdarzenia łącznie (boot + nagranie + upload): <strong>~60–90 s</strong>,
+        z czego pierwsze 20–40 s „ślepe”.</li>
+        <li>Sarna żeruje 3–10 min — ją złapiesz; pies/człowiek przechodzący w 15 s — nie.
+        <strong>Odstraszanie dźwiękiem z tej kamery odpada</strong> (za późno) — głośnik
+        musi wisieć na ESP32, które budzi się w ~1 s.</li>
+      </ul>
+    </article>
+    <article class="mini">
+      <h3>Energia — ile kosztuje jedno zdarzenie</h3>
+      <ul>
+        <li>Boot ~35 s × 3,5–4 W ≈ <strong>0,04 Wh</strong> na uruchomienie.</li>
+        <li>Nagranie z IR w nocy ~25 s × 5–6 W ≈ 0,04 Wh (dzień bez IR ~0,025 Wh).</li>
+        <li>Razem <strong>~0,06–0,08 Wh/zdarzenie</strong>, czyli ~1,3–1,7 Wh/dobę
+        przy 20 zdarzeniach (+ czuwanie ładowarki/PIR ~0,1 Wh).</li>
+        <li>Punkt odniesienia: Imou Cell = 0,34 Wh na 60 zdarzeń (0,006 Wh/szt.) —
+        <strong>10× mniej</strong>, bo nie płaci boota. Ty płacisz pełny start Linuxa
+        za każdym razem; ESP32+PIR nie płaci nic.</li>
+        <li>Praktyczny zestaw: <strong>3× 18650 + panel 10 W + CN3791</strong> —
+        panel pokrywa zużycie nawet w pochmurne dni, zapas na tydzień bez słońca.
+        Zimą montuj panel pod 60–70° (śnieg sam się zsuwa).</li>
+      </ul>
+    </article>
+  </div>
+
+  <h3 style="margin-top:1.2rem">Zapis i przesył — trzy architektury</h3>
+  <div class="grid2">
+    <article class="mini">
+      <h3>A. Zasięg Wi-Fi — serwer nagrywa</h3>
+      <p>Najczystszy wariant: <strong>kamera bez karty SD</strong> tylko streamuje RTSP,
+      a nagrywa Twój serwer (go2rtc/ffmpeg z auto-reconnect po pojawieniu się strumienia).
+      Wycięcie zasilania niczego nie korumpuje — nie ma lokalnego zapisu. Upload „jest”
+      równolegle ze strumieniem; klip tniesz z bufora serwera.</p>
+    </article>
+    <article class="mini">
+      <h3>B. Pole bez Wi-Fi — okna uploadu</h3>
+      <p>Klipy lecą na kartę SD przy każdym zdarzeniu; 2–3× dziennie ESP32 budzi
+      kamerę <em>i</em> router/modem 4G na 4–5 minut: klipy wędrują SFTP/rsync na
+      serwer, potem wszystko znowu śpi. LTE attach z zimna to 20–40 s — dlatego okno
+      zbiorcze, nie upload per zdarzenie.</p>
+    </article>
+    <article class="mini">
+      <h3>C. Moduł T31 + open firmware</h3>
+      <p>Pełna kontrola: moduł kamery na Ingenic T31 z OpenIPC/Thingino bootuje w
+      10–20 s, wystawia RTSP/SSH, a wybudzeniem i zasilaniem rządzi ESP32. To droga do
+      „własnej kamery IP projektowanej pod PIR” — najwięcej pracy, najlepszy efekt.</p>
+    </article>
+    <article class="mini">
+      <h3>Hybryda (rekomendowana)</h3>
+      <p>ESP32+PIR robi <strong>natychmiastowe zdjęcie do pusha</strong> (&lt;2 s od
+      ruchu), a kamera IP budzona tym samym PIR dołącza 30 s później z jakościowym
+      klipem 2K. Push masz od razu, materiał dowodowy z dobrą matrycą — kosztem
+      ~1,5–2 Wh/dobę.</p>
+    </article>
+  </div>
+  <div class="tip">
+    <strong>Werdykt:</strong> energetycznie PIR-woken IP cam to <strong>~60× taniej niż
+    ta sama kamera 24/7</strong> i tylko ~2,5× drożej niż czyste ESP32+PIR. Ograniczeniem
+    nie jest prąd, tylko <strong>czas bootowania</strong>: 20–40 s ślepej strefy na zdarzenie.
+    Jeśli akceptujesz, że łapiesz „to, co stoi, a nie to, co przebiega” — wariant ma sens.
+  </div>
+</section>
+
 <section id="energia" class="card">
   <h2>5. Budżet energii — ile ciągnie, jaki akumulator</h2>
   <p>Dwa światy: <strong>klasyczna kamera IP</strong> (ciągłe 3–5 W, prosta, droga w
@@ -235,6 +317,7 @@
   <div class="tabs" role="tablist" aria-label="Tryb kalkulatora">
     <button class="tab active" data-tab="esp32" role="tab" aria-selected="true">ESP32 + PIR (rekomendowane)</button>
     <button class="tab" data-tab="ipcam" role="tab" aria-selected="false">Klasyczna kamera IP</button>
+    <button class="tab" data-tab="pirwake" role="tab" aria-selected="false">Kamera IP budzona PIR</button>
   </div>
 
   <div class="tab-panel active" id="panel-esp32">
@@ -297,6 +380,41 @@
       96 Wh/dobę (4 W × 24 h) wymaga ~380 W panelu i ~25 Ah akumulatora 12 V — koszt
       rzędu 1500+ zł. ESP32 z PIR robi to za 6 W panelu i jedną ogniwo 18650.</p>
   </div>
+
+  <div class="tab-panel" id="panel-pirwake">
+    <div class="calc-grid">
+      <div class="controls">
+        <label>Zdarzenia ruchu na dobę <output id="o-pw-events">20</output>
+          <input type="range" id="pw-events" min="1" max="200" value="20" step="1"></label>
+        <label>Typ kamery (czas boota) <output id="o-pw-cam">retail 35 s</output>
+          <input type="range" id="pw-cam" min="0" max="2" value="0" step="1"></label>
+        <p class="hint">Retail Tapo/Xiaomi: 25–45 s; moduł T31 z OpenIPC/Thingino: 10–20 s;
+        kamera bateryjna (Imou Cell): &lt;1 s — wtedy to już nie „budzona IP”, tylko
+        gotowy produkt.</p>
+        <label>Nagrywanie na zdarzenie (s) <output id="o-pw-rec">30</output>
+          <input type="range" id="pw-rec" min="5" max="120" value="30" step="5"></label>
+        <label>Czuwanie ładowarki + PIR (mW) <output id="o-pw-standby">10</output>
+          <input type="range" id="pw-standby" min="5" max="100" value="10" step="5"></label>
+        <p class="hint">CN3791 + PIR + ESP32 w deep sleep: ~5–30 mW w skali doby
+        (dzielniki pomiarowe i regulator potrafią dołożyć — mierz u siebie).</p>
+        <label>Panel fotowoltaiczny (W) <output id="o-pw-panel">10</output>
+          <input type="range" id="pw-panel" min="0" max="30" value="10" step="1"></label>
+        <label>Pora roku <output id="o-pw-season">lato</output>
+          <input type="range" id="pw-season" min="0" max="1" value="0" step="1"></label>
+      </div>
+      <div class="results">
+        <div class="metric"><span class="m-label">Energia na zdarzenie</span><span class="m-value" id="pw-ev">—</span></div>
+        <div class="metric"><span class="m-label">Pobór na dobę</span><span class="m-value" id="pw-day">—</span></div>
+        <div class="metric"><span class="m-label">Zapas z panelu na dobę</span><span class="m-value" id="pw-solar">—</span></div>
+        <div class="metric"><span class="m-label">18650 3000 mAh — dni bez słońca</span><span class="m-value" id="pw-days">—</span></div>
+        <div class="metric"><span class="m-label">Wniosek</span><span class="m-value" id="pw-verdict">—</span></div>
+      </div>
+    </div>
+    <p class="note">Model: boot pobiera 3,7 W przez czas boota; nagrywanie 3,5 W w dzień /
+    5,5 W z IR w nocy (licz ostro, czyli z IR); upload idzie równolegle ze strumieniem
+    (Wi-Fi) albo w oknach zbiorczych (4G). Czuwanie: CN3791 + PIR + ESP32 ~25 mW.
+    Ślepa strefa = czas boota — tyle pierwszych sekund zdarzenia nigdy nie nagramy.</p>
+  </div>
 </section>
 
 <section id="koszty" class="card">
@@ -346,6 +464,84 @@
   <p class="note">Przy 100 szt. wersji 4G części schodzą do ~300–350 zł/szt.
   Sprzedaż 999–1299 zł brutto jest realna, bo konkurencyjna fotopułapka 4G
   (680–1000 zł) nie odstrasza i nie mierzy T/H. Unikatowa wartość = monitoring + push + odstraszanie w jednym.</p>
+</section>
+
+<section id="oem" class="card">
+  <h2>6.5 Fotopułapka OEM + własna warstwa softu — czy kupić gotowiec i dołożyć soft?</h2>
+  <p><strong>Kluczowy fakt rynkowy:</strong> żadna retail fotopułapka nie ma publicznego
+  API. Kamery bateryjne Reolink nie wystawiają HTTP API (integracja tylko przez Home
+  Hub, potwierdzone przez społeczność HA); GardePro, Seehot i Espo trzymają wszystko
+  w zamkniętym ekosystemie „ich aplikacja + ich chmura”. Dorobienie „warstwy softu”
+  zależy więc od tego, <em>co</em> kupisz — i są na to trzy realne ścieżki:</p>
+
+  <div class="grid2">
+    <article class="mini">
+      <h3>Ścieżka A — MVP na retail z FTP/SMTP (weekend)</h3>
+      <ul>
+        <li>Kup 1–2 fotopułapki 4G z opcją <strong>wysyłki zdjęć na własny
+        FTP/SMTP</strong> (wiele modeli Seehot/Espo/GardePro to ma — zamiast do ich
+        chmury ustawiasz własny serwer).</li>
+        <li>Twój backend przyjmuje pliki, robi push (Web Push/Telegram), opcjonalnie
+        klasyfikuje gatunek. <strong>Zero firmware, zero MOQ.</strong></li>
+        <li>Ograniczenie: zwykle zdjęcia (nie klipy) i brak dwukierunkowego sterowania
+        (nie odpalisz dźwięku z serwera).</li>
+        <li>Koszt: 600–900 zł/szt. — idealne do walidacji wartości „własnego softu”,
+        zanim wydasz złotówkę na OEM.</li>
+      </ul>
+    </article>
+    <article class="mini">
+      <h3>Ścieżka B — pełna kontrola: OpenIPC/Thingino</h3>
+      <ul>
+        <li>Kamery IP na <strong>Ingenic T31</strong> przyjmą otwarty firmware:
+        <a href="https://openipc.org" rel="noopener">openipc.org</a> (lista wspieranego
+        sprzętu) albo młodsze <a href="https://thingino.com" rel="noopener">thingino.com</a>
+        — w pełni otwarty enkoder/streamer.</li>
+        <li>Dostajesz RTSP, SSH, własne skrypty, deep sleep — od ~100–250 zł za płytę
+        z T31. To platforma deweloperska „własnej fotopułapki”.</li>
+        <li><strong>Pułapka:</strong> to działa tylko dla kamer IP zasilanych sieciowo.
+        Bateryjne fotopułapki w środku mają Novatek/SONiX/SigmaStar — <strong>żaden
+        open firmware ich nie obsługuje.</strong></li>
+      </ul>
+    </article>
+  </div>
+
+  <div class="grid2" style="margin-top:1rem">
+    <article class="mini">
+      <h3>Ścieżka C — prawdziwy OEM/ODM na produkcję</h3>
+      <ul>
+        <li>Alibaba/Made-in-China: basic trail cam OEM <strong>$43–79/szt., MOQ ~2000</strong>;
+        pojedyncze sample kupisz za $48–79.</li>
+        <li>Warianty 4G z apką: <strong>$105–118/szt.</strong> (cenniki ODM).</li>
+        <li>Standard branżowy: MOQ 50–1000 szt., $13–250/szt. zależnie od specyfikacji.</li>
+        <li>Dostawcy (np. Willfine) mają 4 poziomy OEM: od nadruku logo po pełny
+        custom PCB + firmware.</li>
+        <li><strong>Najważniejsza negocjacja: wymagaj firmware z otwartym protokołem
+        (RTSP/HTTP API) albo SDK.</strong> Custom firmware to NRE typowo kilka–kilkanaście
+        tys. $. Bez tego dostajesz ich zamkniętą apkę ze swoim logo — zero
+        różnicowania, zero „Twojej warstwy softu”.</li>
+      </ul>
+    </article>
+    <article class="mini">
+      <h3>Co z tego wynika biznesowo</h3>
+      <ul>
+        <li><strong>Prototyp:</strong> ścieżka A (2 szt. retail z FTP) + jeden moduł T31
+        z Thingino jako platforma firmware. Budżet &lt; 2000 zł, czas: weekend na ingest,
+        2–4 tygodnie na sensowną PWA.</li>
+        <li><strong>Decyzja o OEM (MOQ, NRE):</strong> dopiero, gdy appka udowodni, że
+        ludzie chcą Twoje pushy/rozpoznawanie/odstraszanie, a nie „kolejną apkę z
+        chińskiej chmury”.</li>
+        <li>Wtedy $45–80/szt. przy 200+ szt. + własny soft daje cenę 999–1299 zł brutto
+        z zdrową marżą (patrz kalkulator wyżej).</li>
+        <li>Alternatywa bez MOQ: sprzedaż <strong>kitu</strong> (ESP32 + PIR + panel +
+        obudowa drukowana) z Twoim firmware i apką — to jest właśnie rdzeń Solar Sentry.</li>
+      </ul>
+    </article>
+  </div>
+  <div class="tip">
+    <strong>Skrót:</strong> na prototyp kup <em>dostępne na rynku</em> retail z FTP/SMTP
+    (św. A) i moduł T31 (św. B). OEM z MOQ to decyzja <em>po</em> walidacji softu —
+    i wtedy tylko z wymogiem otwartego protokołu w umowie.
+  </div>
 </section>
 
 <section id="pwa" class="card">
@@ -400,6 +596,11 @@
     <li>Szpiegujemy / Nocny Łowca — ceny fotopułapek 4G z panelem (680–1000 zł) jako benchmark cenowy.</li>
     <li>Imou (Cell PT, Cell PT 4G, Ranger 2) — oficjalne liczby energetyczne kamer bateryjnych: 0,34 Wh/60 zdarzeń dziennie, solar 3–7 W → 3,6–8,4 Wh/dzień; Ranger 2 < 3,5 W.</li>
     <li>TP-Link Tapo / Xiaomi / EZVIZ — ceny kamer IP i zestawów solarnych (Tapo C200/C225 ~150–250 zł, EZVIZ H3c 2K ~189 zł, Xiaomi BW400 Pro zestaw ~599 zł) jako benchmark „co kupuje się za 230 zł”.</li>
+    <li>Reolink Support / Community — kamery bateryjne Reolink bez HTTP API dla zewnętrznego software'u (integracja tylko przez Home Hub) — kluczowe ograniczenie „doróbki softu” do gotowców.</li>
+    <li>Thingino (thingino.com) — w pełni otwarty firmware dla kamer na Ingenic SoC; OpenIPC (openipc.org) — lista wspieranych płyt T10/T20/T31/T40.</li>
+    <li>Alibaba / Made-in-China — OEM/ODM trail cameras: $43–79/szt. przy MOQ ~2000 (basic), $105–118/szt. warianty 4G z apką; sample 1–2 szt. $48–79; standard MOQ 50–1000, $13–250/szt.</li>
+    <li>Willfine — cztery poziomy OEM/ODM (logo → custom PCB/firmware) jako reprezentatywny cennik usług ODM.</li>
+    <li>Czas bootowania kamer IP: pomiary społeczności IP Cam Talk / OpenIPC dla T31 (~10–20 s) vs kamery retail na pełnym Linuxie (25–45 s) — estymaty inżynierskie.</li>
   </ul>
   <p class="note">Liczby energetyczne to estymaty inżynierskie do szacunku budżetu — przed
   produkcją zmierz realny prąd spoczynkowy własnej płyty i sprawdź zimowe nasłonecznienie

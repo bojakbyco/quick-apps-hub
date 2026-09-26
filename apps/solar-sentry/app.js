@@ -107,6 +107,50 @@
   bind("ipd", "o-ipd", function (v) { ipCalc(); return v + " dni"; });
   bind("iptype", "o-iptype", function (v) { ipCalc(); return v === "0" ? "LiFePO₄ (DoD 80%)" : "Kwasowy (DoD 50%)"; });
 
+  /* ============ Kamera IP budzona PIR ============ */
+  var PW_CAMS = [
+    { name: "retail", boot: 35, label: "retail 35 s" },
+    { name: "t31",    boot: 15, label: "moduł T31 15 s" },
+    { name: "batt",   boot: 1,  label: "bateryjna 1 s" }
+  ];
+  var W_BOOT = 3.7, W_REC = 5.5; // boot; nagrywanie z IR (liczymy ostro)
+
+  function pwCalc() {
+    var events = +$("pw-events").value;
+    var cam = PW_CAMS[+$("pw-cam").value];
+    var rec = +$("pw-rec").value;
+    var standbyW = +$("pw-standby").value / 1000;
+    var panelW = +$("pw-panel").value;
+    var winter = $("pw-season").value === "1";
+
+    var evWh = (W_BOOT * cam.boot + W_REC * rec) / 3600;
+    var dayWh = evWh * events + standbyW * 24;
+    var solarWh = panelW * (winter ? 0.7 : 3.5) * 0.3; // kWh/m²/d × sprawność toru
+    var cells = 3;                                      // 3× 18650 = ~33 Wh użytecznie
+    var days = solarWh >= dayWh ? Infinity : 33 / (dayWh - solarWh);
+
+    $("pw-ev").textContent = fmt(evWh * 1000, 0) + " mWh/zdarzenie";
+    $("pw-day").textContent = fmt(dayWh, 1) + " Wh/dobę";
+    $("pw-solar").textContent = fmt(solarWh, 1) + " Wh/dobę" + (panelW === 0 ? " (brak panelu)" : "");
+    $("pw-days").textContent = isFinite(days)
+      ? fmt(days, 1) + " dni (3× 18650)"
+      : "∞ — panel pokrywa całe dobowe zużycie";
+
+    var v;
+    if (cam.boot >= 25) v = "Ślepa strefa " + cam.boot + " s: łapiesz to, co stoi (sarna żeruje minuty), nie to, co przebiega. Odstraszanie tylko z osobnego ESP32+głośnika.";
+    else if (cam.boot >= 5) v = "T31 z open firmware: ślepa strefa " + cam.boot + " s — najlepszy stosunek jakości do kontroli we własnym stacku.";
+    else v = "Kamera bateryjna budzi się <1 s — to już gotowy produkt klasy Imou Cell; Twój soft to tylko warstwa na wierzchu.";
+    v += " Pobór " + fmt(dayWh, 1) + " Wh/dobę = " + fmt(96 / Math.max(dayWh, 0.01), 0) + "× taniej niż ta sama kamera 24/7.";
+    $("pw-verdict").textContent = v;
+  }
+
+  bind("pw-events", "o-pw-events", function (v) { pwCalc(); return v; });
+  bind("pw-cam", "o-pw-cam", function (v) { pwCalc(); return PW_CAMS[+v].label; });
+  bind("pw-rec", "o-pw-rec", function (v) { pwCalc(); return v + " s"; });
+  bind("pw-standby", "o-pw-standby", function (v) { pwCalc(); return v + " mW"; });
+  bind("pw-panel", "o-pw-panel", function (v) { pwCalc(); return v + " W"; });
+  bind("pw-season", "o-pw-season", function (v) { pwCalc(); return v === "0" ? "lato" : "zima"; });
+
   /* ================= Koszty ================= */
   function costCalc() {
     var bom = +$("bom").value;
@@ -133,5 +177,5 @@
   bind("asm", "o-asm", function (v) { costCalc(); return v + "%"; });
   bind("marza", "o-marza", function (v) { costCalc(); return v + "%"; });
 
-  espCalc(); ipCalc(); costCalc();
+  espCalc(); ipCalc(); costCalc(); pwCalc();
 })();
