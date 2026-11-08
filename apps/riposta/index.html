@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Riposta — cięte odpowiedzi bez hejtu</title>
+<meta name="description" content="Generator ciętych ripost na komentarze: wklej kontekst, wybierz poziom 1-4, dodaj styl z promptem. Self-roast w cenie.">
+<link rel="stylesheet" href="./style.css?v=2">
+<script defer src="./app.js?v=2"></script>
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M4 4h16v11H8.4L4 19.2V4Z"></path><path fill="var(--bg)" d="M7.5 7.5h9v1.6h-9zM7.5 10.6h9v1.6h-9z"></path></svg>
+      <strong>Riposta</strong>
+    </div>
+    <nav class="top-actions">
+      <button id="btn-key-open" type="button" class="ghost" aria-haspopup="dialog">Tryb: demo</button>
+      <button id="btn-help" type="button" class="ghost" aria-haspopup="dialog">Jak to działa</button>
+      <a href="/" class="ghost">Hub</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <p class="eyebrow">Skalpel, nie młotek</p>
+      <h1>Cięte odpowiedzi, które wygrywają wymianę</h1>
+      <p class="lead">Wklej komentarz, dodaj kontekst, wybierz poziom. Riposta stawia cię w dobrym świetle — bez wulgaryzmów, bez gróźb, bez ataków na wygląd czy pochodzenie.</p>
+    </section>
+
+    <form id="composer" novalidate>
+      <div class="field">
+        <span class="label-text" id="lbl-mode">Tryb</span>
+        <div class="segmented">
+          <input type="radio" name="mode" id="mode-reply" value="reply" checked>
+          <label for="mode-reply">Riposta</label>
+          <input type="radio" name="mode" id="mode-roast" value="roast">
+          <label for="mode-roast">Self-roast</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="inp-comment" id="lbl-comment"><span id="lbl-comment-text">Komentarz, na który odpowiadasz</span> <span class="req">*</span></label>
+        <textarea id="inp-comment" rows="3" placeholder="np. „typu kupił drukarkę 3D i myśli że jest inżynierem lol”"></textarea>
+      </div>
+
+      <div class="field" id="fld-context">
+        <label for="inp-context" id="lbl-context"><span id="lbl-context-text">Kontekst — treść twojego posta lub wątku</span> <span class="opt">(opcjonalnie)</span></label>
+        <textarea id="inp-context" rows="2" placeholder="np. „Pokazuję obudowę do elektroniki drukowaną w PLA-CF”"></textarea>
+      </div>
+
+      <div class="field">
+        <span class="label-text" id="lbl-level">Poziom ostrości</span>
+        <input type="range" id="rng-level" min="1" max="4" step="1" value="2" aria-describedby="lvl-help">
+        <div class="level-scale" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span></div>
+        <p class="hint" id="lvl-help"><strong id="lvl-name">Sarkazm</strong> — <span id="lvl-desc">zimna, sucha riposta z podtekstem</span></p>
+      </div>
+
+      <div class="field">
+        <label for="inp-style">Styl lub persona <span class="opt">(opcjonalnie)</span></label>
+        <input type="text" id="inp-style" list="style-presets" placeholder="np. „sceptyczny naukowiec”">
+        <datalist id="style-presets">
+          <option value="sceptyczny naukowiec"></option>
+          <option value="ziomek z osiedla"></option>
+          <option value="lord, który zniżył się do rozmowy"></option>
+          <option value="babcia bez filtra"></option>
+          <option value="komentator sportowy"></option>
+          <option value="trener motywacyjny po zmianie"></option>
+        </datalist>
+      </div>
+
+      <div class="field actions">
+        <button id="btn-generate" type="submit" class="primary">Generuj ripostę</button>
+        <button id="btn-clear" type="button" class="ghost">Wyczyść</button>
+      </div>
+    </form>
+
+    <section id="results" class="results" aria-live="polite" hidden>
+      <h2 class="sr-only">Wygenerowane riposty</h2>
+    </section>
+
+    <section class="keynote">
+      <h2>Bez cenzury? Nie — bez dowodów przeciwko tobie</h2>
+      <p>Każdy model „bez cenzury” wypluje obelgę, ale obelga to przegrana: zostawia cię ze zgłoszeniem i gotowym dowodem. Riposta zostawia cię z lajkami. Dlatego poziomy 1–4 idą w ostrość dowcipu, nie w wulgaryzmy.</p>
+      <ul class="rules">
+        <li><strong>1 · Ironia</strong> — subtelna, uprzejma, z podtekstem</li>
+        <li><strong>2 · Sarkazm</strong> — zimna, sucha, cięta</li>
+        <li><strong>3 · Riposta</strong> — szybka, ostra, zapada w pamięć</li>
+        <li><strong>4 · Brutalna meritoria</strong> — pełny skalpel: kompromituje argument, nie człowieka</li>
+      </ul>
+      <p class="fine">Riposta nie generuje: wulgaryzmów, gróźb, doxxingu ani ataków na wygląd, pochodzenie, orientację, religię czy niepełnosprawność — tak jak wymaga tego art. 212 i 216 KK. Bez wyjątków, także „dla żartu”.</p>
+      <p class="fine" id="demo-note">Tryb demo: przykładowe riposty generowane lokalnie, bez modelu. Dodaj własny klucz OpenRouter w „Ustawieniach klucza”, żeby generować na żywo — klucz zostaje w twojej przeglądarce.</p>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p>Riposta · quick-apps-hub · <a href="/">wszystkie aplikacje</a></p>
+  </footer>
+
+</div>
+
+<dialog id="dlg-help">
+  <article>
+    <h2>Jak działa Riposta</h2>
+    <ol>
+      <li>Wklej komentarz, na który chcesz odpowiedzieć (albo przełącz w tryb self-roast i wklej własny post).</li>
+      <li>Dodaj kontekst: treść posta lub wątku, w którym padł komentarz.</li>
+      <li>Wybierz poziom 1–4 — od ironii po brutalną meritorię.</li>
+      <li>Opcjonalnie wpisz styl: „sceptyczny naukowiec”, „ziomek z osiedla”, cokolwiek.</li>
+      <li>Kliknij Generuj — dostajesz 3 warianty do wyboru.</li>
+    </ol>
+    <h3>Klucz OpenRouter</h3>
+    <p>Bez klucza apka działa w trybie demo (przykładowe riposty). Z kluczem generuje na żywo przez OpenRouter — wybierz model w ustawieniach (klucz). Klucz trzymamy tylko w localStorage twojej przeglądarki; nie ma tu serwera, który by go zobaczył.</p>
+    <p><button id="btn-open-key" type="button" class="ghost">Otwórz ustawienia klucza</button></p>
+    <p class="fine">Model sam odmówi wulgaryzmów i gróźb — prosimy go o to w instrukcji. To celowe: ostrość bierze się z dowcipu, nie z przekleństw.</p>
+    <button id="btn-close-help" type="button" class="primary">Zamknij</button>
+  </article>
+</dialog>
+
+<dialog id="dlg-key">
+  <article>
+    <h2>Klucz OpenRouter</h2>
+    <p class="fine">Klucz zapisujemy tylko w localStorage tej przeglądarki. Żaden serwer go nie widzi — zapytania idą prosto z przeglądarki do OpenRouter.</p>
+    <div class="field">
+      <label for="inp-key">Klucz API (sk-r…)</label>
+      <input type="password" id="inp-key" autocomplete="off" placeholder="sk-or-v1-…">
+    </div>
+    <div class="field">
+      <label for="sel-model">Model</label>
+      <select id="sel-model">
+        <option value="deepseek/deepseek-chat-v3.1">DeepSeek V3.1 — tani i złośliwie dowcipny</option>
+        <option value="openai/gpt-4o-mini">GPT-4o mini — szybki i bezpieczny wybór</option>
+        <option value="google/gemini-2.0-flash-001">Gemini 2.0 Flash — szybki, tani</option>
+        <option value="anthropic/claude-3.5-haiku">Claude 3.5 Haiku — dobre ironie</option>
+        <option value="meta-llama/llama-3.3-70b-instruct">Llama 3.3 70B — open source</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="sel-lang">Język ripost</label>
+      <select id="sel-lang">
+        <option value="auto">Auto — język komentarza</option>
+        <option value="polski">Polski</option>
+        <option value="angielski">Angielski</option>
+      </select>
+    </div>
+    <div class="field actions">
+      <button id="btn-save-key" type="button" class="primary">Zapisz</button>
+      <button id="btn-remove-key" type="button" class="ghost">Usuń klucz</button>
+      <button id="btn-close-key" type="button" class="ghost">Zamknij</button>
+    </div>
+    <p class="fine" id="key-status"></p>
+  </article>
+</dialog>
+
+</body>
+</html>

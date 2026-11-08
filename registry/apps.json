@@ -6,6 +6,28 @@
   },
   "apps": [
     {
+      "slug": "riposta",
+      "name": "Riposta — cięte odpowiedzi bez hejtu",
+      "description": "Generator ciętych ripost na komentarze: wklej komentarz i kontekst, wybierz poziom 1–4 (ironia → brutalna meritoria), dodaj personę. Tryb self-roast. Bez wulgaryzmów i ataków personalnych — dowcip zamiast obelgi. Klucz OpenRouter opcjonalny (BYO, trzymany w przeglądarce).",
+      "category": "Aplikacja",
+      "accent": "#f23d5a",
+      "source": "apps/riposta",
+      "template": "blank",
+      "featured": true
+    },
+    {
+      "slug": "print-parts",
+      "name": "Druk 3D — części, które się sprzedają",
+      "description": "Które plastikowe części zamienne opłaca się drukować i sprzedawać: 31 elementów z cenami OEM potwierdzonymi źródłem, zyskiem na godzinę pracy Bambu Lab X2D, ślepe zaułki (gdzie chiński zamiennik wygrywa), cztery modele biznesowe, prawo UE (klauzula naprawy, GPSR, pliki 3D), podatki 2026 i plan startu w 30 dni.",
+      "category": "Raport badawczy",
+      "accent": "#c2410c",
+      "source": "apps/print-parts",
+      "template": "blank",
+      "featured": true,
+      "created": "2026-11-08",
+      "updated": "2026-11-08"
+    },
+    {
       "slug": "solar-sentry",
       "name": "Solar Sentry — solarny strażnik działki",
       "description": "Koncept taniej solarnej maszyny odstraszającej: PIR budzi kamerę ESP32, klip leci na serwer i push na telefon, głośnik płoszy sarny dźwiękiem. Budżet energii (ESP32 / kamera IP / kamera budzona PIR), koszty BOM, OEM fotopułapek, legalność w Polsce, wymagania PWA.",

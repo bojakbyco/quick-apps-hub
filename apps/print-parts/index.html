@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Druk 3D — części zamienne, które naprawdę się sprzedają | X2D</title>
+<meta name="description" content="Analiza rynku drukowanych części zamiennych: które elementy mają potwierdzoną cenę OEM, gdzie druk 3D wygrywa z chińskim zamiennikiem, unit economics na Bambu Lab X2D, prawo UE i plan startu w 30 dni.">
+<meta name="theme-color" content="#11100e">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+<a class="skip" href="#werdykt">Przejdź do treści</a>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <a class="brand" href="./">części<span>3D</span></a>
+    <nav class="nav" aria-label="Sekcje raportu">
+      <a href="#werdykt">Werdykt</a>
+      <a href="#przewagi">Przewagi</a>
+      <a href="#tabela">Tabela</a>
+      <a href="#kalkulator">Kalkulator</a>
+      <a href="#playbooki">Modele</a>
+      <a href="#zaułki">Zaułki</a>
+      <a href="#prawo">Prawo</a>
+      <a href="#plan">Plan</a>
+      <a href="#zrodla">Źródła</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <section class="masthead" aria-labelledby="h1">
+    <pre class="vignette" aria-hidden="true">  ┌───────────────────────────┐
+  │  [■]  CZESCI ZAMIENNE 3D  │
+  └───────────────────────────┘
+     ▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁</pre>
+    <p class="kicker">Raport rynkowy · Bambu Lab X2D · PL</p>
+    <h1 id="h1">Druk 3D jako biznes<br><em>części zamiennych</em></h1>
+    <p class="lead">Które plastikowe elementy naprawdę się opłaca drukować i sprzedawać — z cenami OEM
+      potwierdzonymi źródłem, realnym kosztem wydruku, marżą na godzinę pracy maszyny i granicą prawa.</p>
+    <div class="dateline">
+      <span>Wydanie 2.0</span>
+      <span>31 części w tabeli</span>
+      <span>12 źródeł</span>
+      <span id="gen-date">—</span>
+    </div>
+    <p class="legend">
+      <b>Oznaczenia wiarygodności:</b>
+      <span class="tag w">W</span> cena OEM potwierdzona źródłem ·
+      <span class="tag e">E</span> szacunek rynkowy. Marże liczone są zawsze od ceny sprzedaży minus materiał,
+      energia, opakowanie i opłaty platformy — nie od ceny OEM.
+    </p>
+  </section>
+
+  <section id="werdykt" class="sec" aria-labelledby="h-werdykt">
+    <h2 id="h-werdykt"><span class="num">01</span> Werdykt w trzech zdaniach</h2>
+
+    <div class="verdict">
+      <article class="vcard bad">
+        <h3>Twoim konkurentem nie jest OEM</h3>
+        <p>Jest nim chiński zamiennik z Allegro i AliExpress. Dlatego półka „drogi plastik do AGD” jest
+          w Polsce prawie pusta: uchwyt drzwi pralki Bosch kosztuje <b>29,90 zł</b>, kółko kosza zmywarki
+          <b>5,90 zł</b>, tacka do Dediki <b>3,90 EUR</b>.</p>
+        <p class="mini">Wszystkie trzy przykłady pochodzą z poradników „wydrukuj to i sprzedaj”. Wszystkie trzy
+          są w tym raporcie w sekcji <a href="#zaułki">ślepe zaułki</a>, z linkiem do ceny.</p>
+      </article>
+
+      <article class="vcard good">
+        <h3>Druk wygrywa tam, gdzie nie ma czego kopiować</h3>
+        <p>Część wycofana z produkcji, wariant, którego nikt nie magazynuje, dopasowanie do konkretnego
+          modelu i rocznika, dostawa w 24 h, zlecenie B2B wstrzymujące linię. To sześć przewag, których
+          chińska fabryka nie odtworzy — i na nich buduje się marżę.</p>
+      </article>
+
+      <article class="vcard neu">
+        <h3>To biznes usługowy z produktem na wejściu</h3>
+        <p>Najwyższe stawki w tabeli nie są za sztukę, tylko za <b>złotówkę maszynogodziny</b> i za zlecenie.
+          Osłona do obiektywu Canon: 79 zł, godzina druku. Element „unobtainium” do youngtimera: 250 zł
+          i marża usługowa. Jedno i drugie bije kółko do zmywarki 40 razy.</p>
+      </article>
+    </div>
+
+    <div class="stats" id="stats">
+      <!-- wypełniane przez app.js -->
+    </div>
+  </section>
+
+  <section id="przewagi" class="sec" aria-labelledby="h-prze">
+    <h2 id="h-prze"><span class="num">02</span> Sześć przewag, które decydują o marży</h2>
+    <p class="intro">Każdy punkt to odpowiedź na pytanie „dlaczego klient nie kupi tego z Chin za 15 zł?”.
+      Jeśli nie umiesz odpowiedzieć na to pytanie dla swojej części, nie ma biznesu.</p>
+
+    <div class="grid6">
+      <article><span class="pn">01</span><h3>Niedostępność</h3><p>Część wycofana, „out of stock”,
+        tylko w serwisie albo w zestawie za 300 zł. Klient nie porównuje cen — porównuje „jest / nie ma”.</p></article>
+      <article><span class="pn">02</span><h3>Dopasowanie</h3><p>Konkretny model, rocznik, rewizja. Chiński
+        sprzedawca robi „uniwersalne”, ty robisz to jedno, które pasuje bez pilnika.</p></article>
+      <article><span class="pn">03</span><h3>Mały wolumen</h3><p>50 sztuk rocznie w całej Europie.
+        Dla fabryki to nic, dla jednej drukarki to zamówienie.</p></article>
+      <article><span class="pn">04</span><h3>Czas</h3><p>Wydruk dziś, wysyłka jutro. Naprawa pralki w środku
+        tygodnia jest warta więcej niż 20 zł różnicy w cenie.</p></article>
+      <article><span class="pn">05</span><h3>B2B i przestój</h3><p>Maszyna stoi = 200–500 zł na godzinę.
+        Osłona za 350 zł przestaje być droga i nikt nie negocjuje.</p></article>
+      <article><span class="pn">06</span><h3>Design</h3><p>Akcesorium, które jest lepsze od oryginału,
+        a nie tańszą kopią. Tu klient płaci za pomysł, nie za gramy.</p></article>
+    </div>
+
+    <aside class="callout">
+      <h4>Konsekwencja dla X2D</h4>
+      <p>X2D ma dyszę 300 °C, stal hartowaną i dwie głowice: <b>PA-CF, PAHT-CF, PPA-CF, PC, ASA, TPU 90A</b>
+        są w zasięgu, PPS-CF nie. To dokładnie materiały, których wymagają części nośne, zawiasy i elementy
+        pracujące na słońcu. Głowica pomocnicza służy do podpór — nie do części widocznych.</p>
+      <p class="src-note">Źródło: specyfikacja Bambu Lab X2D i tabela zgodności filamentów (linki w sekcji Źródła).</p>
+    </aside>
+  </section>
+
+  <section id="tabela" class="sec" aria-labelledby="h-tab">
+    <h2 id="h-tab"><span class="num">03</span> Tabela 31 części</h2>
+    <p class="intro">Sortuj po <b>zł/h</b> — to jedyna metryka, która ma sens przy jednej lub kilku drukarkach.
+      Część za 30 zł z godziną druku bije część za 150 zł z siedmioma godzinami. Kliknij wiersz, żeby
+      rozwinąć uzasadnienie i ostrzeżenia.</p>
+
+    <div class="controls">
+      <label class="search">
+        <span class="vh">Szukaj części</span>
+        <input type="search" id="q" placeholder="Szukaj: dyson, zawias, canon…" autocomplete="off">
+      </label>
+      <div class="chips" id="cats" role="group" aria-label="Filtr kategorii"></div>
+      <div class="sorts" role="group" aria-label="Sortowanie">
+        <button type="button" class="sort is-on" data-sort="score">zł/h</button>
+        <button type="button" class="sort" data-sort="price">cena</button>
+        <button type="button" class="sort" data-sort="oem">OEM</button>
+        <button type="button" class="sort" data-sort="demand">popyt</button>
+      </div>
+    </div>
+
+    <p class="count" id="count" aria-live="polite"></p>
+
+    <div class="tablewrap">
+      <table class="tbl" id="tbl">
+        <thead>
+          <tr>
+            <th scope="col">Część / urządzenie</th>
+            <th scope="col">Cena OEM</th>
+            <th scope="col">Materiał</th>
+            <th scope="col">Czas</th>
+            <th scope="col">Cena</th>
+            <th scope="col">Zysk</th>
+            <th scope="col">zł/h</th>
+            <th scope="col">Popyt</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+
+    <div class="cards" id="cards" aria-hidden="false"></div>
+
+    <p class="footnote">Zysk = cena sprzedaży − materiał (z 15% zapasem) − energia (1 zł/h) − opakowanie
+      (6 zł) − opłaty platformy (Etsy: 6,5% + 4% + 0,30 EUR; Allegro: prowizja wg kategorii).
+      Ceny OEM w widełkach brutto; przeliczenia USD/EUR po kursie rynkowym, orientacyjnie.</p>
+  </section>
+
+  <section id="kalkulator" class="sec" aria-labelledby="h-kalk">
+    <h2 id="h-kalk"><span class="num">04</span> Kalkulator: czy Ten wydruk ma sens</h2>
+    <p class="intro">Twoje liczby, nie moje. Domyślnie ustawione na adapter odciągu — najlepszy stosunek
+      marży do ryzyka w raporcie.</p>
+
+    <form class="calc" id="calc" onsubmit="return false">
+      <div class="calc-fields">
+        <label>Cena sprzedaży (zł)
+          <input type="number" id="c-price" value="59" min="0" step="1" inputmode="decimal">
+        </label>
+        <label>Materiał (zł/kg)
+          <input type="number" id="c-mat" value="95" min="0" step="1" inputmode="decimal">
+        </label>
+        <label>Waga wydruku (g)
+          <input type="number" id="c-g" value="22" min="0" step="1" inputmode="decimal">
+        </label>
+        <label>Czas druku (h)
+          <input type="number" id="c-h" value="0.8" min="0" step="0.1" inputmode="decimal">
+        </label>
+        <label>Kanał
+          <select id="c-ch">
+            <option value="etsy">Etsy (6,5% + 4% + 0,30 EUR)</option>
+            <option value="allegro">Allegro (prowizja 8% + wysyłka)</option>
+            <option value="own">Własny sklep (0%)</option>
+            <option value="b2b">B2B / faktura (0%)</option>
+          </select>
+        </label>
+        <label>Wysyłka płacona przez klienta
+          <select id="c-ship">
+            <option value="1">tak</option>
+            <option value="0">nie (doliczam do kosztu)</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="calc-out" id="calc-out" aria-live="polite"></div>
+    </form>
+
+    <p class="footnote">Kalkulator nie uwzględnia podatku dochodowego ani ZUS. Przy działalności
+      nierejestrowanej w 2026 r. limit to <b>10 813,50 zł na kwartał</b> — powyżej rejestracja w CEIDG
+      w ciągu 7 dni. Zwolnienie z VAT do 240 tys. zł przychodu.</p>
+  </section>
+
+  <section id="playbooki" class="sec" aria-labelledby="h-play">
+    <h2 id="h-play"><span class="num">05</span> Cztery modele, nie jeden</h2>
+
+    <div class="playbook">
+      <article>
+        <h3>A. Katalog części awaryjnych</h3>
+        <p class="pm">produkt · Etsy / Allegro · 30–80 zł za sztukę</p>
+        <p>20–40 SKU na wąską kategorię (np. słuchawki albo narzędzia). Wygrywa opis, zdjęcie w kontekście
+          i dobór modeli. Marża 60–80%, ale ruch trzeba zbudować samemu.</p>
+        <ul>
+          <li>Start: 15 SKU, jedna kategoria, jedna platforma</li>
+          <li>Metryka: zł/h maszyny, nie marża procentowa</li>
+          <li>Ryzyko: zwroty z powodu tolerancji</li>
+        </ul>
+      </article>
+
+      <article>
+        <h3>B. Zlecenia „unobtainium”</h3>
+        <p class="pm">usługa · oldtimery, motocykle, maszyny · 200–800 zł</p>
+        <p>Klient ma część lub jej resztki. Ty skanujesz, modelujesz, drukujesz. Płatność etapami:
+          zaliczka za projekt, reszta za wydruk. Najwyższa marża, najmniejsza skala.</p>
+        <ul>
+          <li>Cennik: 80–400 EUR za projekt + druk (wzorzec rynkowy z rynku DE)</li>
+          <li>Kanał: grupy właścicielskie, forums, lokalne warsztaty</li>
+          <li>Ryzyko: dwa podejścia do kształtu = praca bez wynagrodzenia</li>
+        </ul>
+      </article>
+
+      <article>
+        <h3>C. B2B: przestój</h3>
+        <p class="pm">usługa · zakłady produkcyjne · 250–600 zł za zlecenie</p>
+        <p>Osłona, gałka, ogniwo łańcucha kablowego. Klient nie kupuje plastiku, kupuje wznowienie
+          produkcji. Wymaga faktury, VAT i wizyty — ale jedno zlecenie to 10 sprzedaży detalicznych.</p>
+        <ul>
+          <li>Wejście: 10 zakładów w promieniu 50 km, jedna wizyta z próbkami</li>
+          <li>Przewaga: drukujesz w 24 h, producent w 3 tygodnie</li>
+          <li>Ryzyko: odpowiedzialność za przestój — jasny zakres w ofercie</li>
+        </ul>
+      </article>
+
+      <article>
+        <h3>D. Akcesorium lepsze od OEM</h3>
+        <p class="pm">produkt · nisze hobby · 40–150 zł</p>
+        <p>Uchwyt, tacka, adapter, który rozwiązuje problem, którego producent nie widzi. Tu nie
+          konkurujesz ceną, bo nie ma z czym. Najlepszy sposób na pierwsze 20 opinii.</p>
+        <ul>
+          <li>Przykład potwierdzony: adapter odciągu 27/36 mm, listing Etsy 20,79 USD</li>
+          <li>Przewaga: własny projekt = brak ryzyka kopiowania cudzego wzoru</li>
+          <li>Ryzyko: łatwe do skopiowania przez innych drukarzy</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section id="zaułki" class="sec" aria-labelledby="h-zau">
+    <h2 id="h-zau"><span class="num">06</span> Ślepe zaułki — z cenami, nie z opinią</h2>
+    <p class="intro">Pięć części, które w poradnikach są „żyłą złota”. W polskich sklepach kosztują tyle,
+      że wydruk nie ma szans. Sprawdź cenę OEM, zanim kupisz filament.</p>
+    <div class="deadlist" id="deadlist"></div>
+  </section>
+
+  <section id="prawo" class="sec" aria-labelledby="h-prawo">
+    <h2 id="h-prawo"><span class="num">07</span> Prawo: trzy pułapki i jedna zmiana, która ci pomaga</h2>
+
+    <div class="legal">
+      <article>
+        <h3>1. Wzory i klauzula naprawy</h3>
+        <p>Od <b>1 maja 2025</b> obowiązuje unijna klauzula naprawy (art. 22 rozporządzenia 2026/715,
+          art. 19 dyrektywy 2024/2823): części zamienne do przywrócenia wyglądu złożonego produktu
+          są wyłączone spod ochrony wzoru. To otwiera rynek — ale nakłada obowiązek <b>wyraźnego
+          poinformowania klienta o pochodzeniu</b> części i ogranicza wyłączenie do części służących
+          wyłącznie naprawie.</p>
+        <p class="warnp">Uwaga: od 1 lipca 2026 prawo wprost zakazuje tworzenia, pobierania, kopiowania
+          i <b>udostępniania plików 3D</b> zarejestrowanego wzoru. Sprzedaż STL „1:1 oryginał” to
+          infringement, nie „inspiracja”.</p>
+      </article>
+
+      <article>
+        <h3>2. Znak towarowy i Etsy</h3>
+        <p>Możesz napisać „pasuje do Dyson V11” — to użycie nominatywne. Nie możesz pisać „oryginał Dyson”,
+          używać logo ani sugerować pochodzenia od producenta. Etsy w 2026 egzekwuje to automatycznie:
+          listingi łamiące zasady są zdejmowane, a sklep zawieszany.</p>
+        <p class="warnp">Praktyka: nazwa modelu w opisie i parametrach, nie w tytule zdjęcia z logo.
+          Własny projekt, własne zdjęcie, własny kształt.</p>
+      </article>
+
+      <article>
+        <h3>3. GPSR — bezpieczeństwo produktu</h3>
+        <p>Sprzedajesz do UE, więc jesteś wytwórcą: identyfikacja, adres, oznaczenie partii, instrukcja,
+          ostrzeżenia, zgłoszenie do systemu Safety Business Gateway przy produktach nieżywnościowych.
+          Dla mikrofirmy to kilka stron dokumentów, nie certyfikacja.</p>
+        <p class="warnp">Nie sprzedawaj jako „element dopuszczony do ruchu” (motoryzacja) ani jako części
+          nośnej w fotelikach i wózkach. Zakres odpowiedzialności musi być węższy niż produktu OEM.</p>
+      </article>
+
+      <article>
+        <h3>4. Podatki i forma</h3>
+        <p><b>Działalność nierejestrowana</b> w 2026: limit <b>10 813,50 zł na kwartał</b> (225% minimalnego
+          wynagrodzenia 4806 zł), liczony kwartalnie od 1 stycznia 2026. Przekroczenie = 7 dni na wpis
+          do CEIDG. Zwolnienie z VAT do <b>240 tys. zł</b> przychodu (wzrost z 200 tys.).</p>
+        <p class="warnp">Przy sprzedaży na Etsy pamiętaj, że opłaty platformy są opodatkowane VAT-em
+          od usługi Etsy — to nie jest koszt twojego produktu.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="plan" class="sec" aria-labelledby="h-plan">
+    <h2 id="h-plan"><span class="num">08</span> Plan na 30 dni</h2>
+    <div class="timeline">
+      <div class="tl"><span class="tl-d">Dni 1–3</span><h3>Wybór niszy, nie produktu</h3>
+        <p>Weź jedną kategorię, w której masz dostęp do urządzeń: słuchawki, narzędzia, rowery albo wózki.
+          Wypisz 20 części, które pękają. Sprawdź cenę OEM i cenę zamiennika na Allegro dla każdej.</p>
+        <p class="done-rule">Warunek wejścia: OEM ≥ 80 zł <i>albo</i> brak zamiennika.</p></div>
+
+      <div class="tl"><span class="tl-d">Dni 4–10</span><h3>Pięć projektów, nie pięćdziesiąt</h3>
+        <p>Zaprojektuj od zera pięć elementów z najlepszym stosunkiem ceny do czasu druku. Mierz suwmiarką
+          oryginał — nie ufaj modelom z internetu przy pasowaniach.</p>
+        <p class="done-rule">Warunek: każdy element testowany na 3 egzemplarzach, luz zmierzony.</p></div>
+
+      <div class="tl"><span class="tl-d">Dni 11–17</span><h3>Sprzedaż pierwszej piątki</h3>
+        <p>Etsy albo Allegro. Zdjęcia w kontekście (część na urządzeniu), opis z listą modeli, czas wysyłki
+          24 h. Cena z kalkulatora, nie z sufitu.</p>
+        <p class="done-rule">Warunek: 10 sprzedaży lub 200 odwiedzin, żeby cokolwiek ocenić.</p></div>
+
+      <div class="tl"><span class="tl-d">Dni 18–24</span><h3>Dwa zlecenia B2B</h3>
+        <p>10 zakładów w promieniu 50 km. Nie sprzedawaj druku — sprzedawaj „część u ciebie w 24 h”.
+          Weź jedno zlecenie nawet po kosztach, żeby zdobyć referencję i zdjęcia.</p>
+        <p class="done-rule">Warunek: jedna faktura B2B = 5–10 sprzedaży detalicznych.</p></div>
+
+      <div class="tl"><span class="tl-d">Dni 25–30</span><h3>Decyzja na danych</h3>
+        <p>Policz zł/h maszyny i zwroty per SKU. Zostaw trzy najlepsze, wytnij resztę. Dopiero wtedy
+          dokup filament, nie odwrotnie.</p>
+        <p class="done-rule">Próg kontynuacji: 25 zł/h maszyny netto i &lt; 5% zwrotów.</p></div>
+    </div>
+  </section>
+
+  <section id="zrodla" class="sec" aria-labelledby="h-src">
+    <h2 id="h-src"><span class="num">09</span> Źródła</h2>
+    <p class="intro">Ceny OEM i dane prawne pochodzą z tych stron. Pozycje oznaczone <span class="tag w">W</span>
+      w tabeli mają tu swoje źródło.</p>
+    <ol class="sources" id="sources"></ol>
+    <p class="footnote">Raport przygotowany {GEN}. Ceny w złotych przeliczone orientacyjnie (USD ≈ 3,7 zł,
+      EUR ≈ 4,3 zł) i mogą się zmieniać. To analiza rynkowa, nie porada prawna — przy sprzedaży
+      w UE skonsultuj GPSR i wzory z prawnikiem.</p>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <p><a href="/">← Quick Apps Hub</a></p>
+  <p>Druk 3D · części zamienne · unit economics · prawo UE</p>
+</footer>
+
+<script src="./data.js"></script>
+<script src="./app.js"></script>
+</body>
+</html>
